@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".PortfolioActivity">
+        </activity>
+        <activity android:name=".StockDetailActivity">
+        </activity>
+        <activity android:name=".SettingsActivity">
+        </activity>
+        <activity android:name=".StockAddActivity">
+        </activity>
+        <activity android:name=".AlertListActivity">
+        </activity>
+        <activity android:name=".AlertAddActivity">
+        </activity>
     </application>
 
 </manifest>
