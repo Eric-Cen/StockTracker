@@ -1,7 +1,8 @@
-package com.mcarving.stocktracker
+package com.mcarving.stocktracker.stockDetail
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.mcarving.stocktracker.R
 
 class StockDetailActivity : AppCompatActivity() {
 

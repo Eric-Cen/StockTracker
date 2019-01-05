@@ -9,24 +9,24 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".portfolios.PortfoliosActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PortfolioActivity">
+        <activity android:name=".portfolioDetail.PortfolioActivity">
         </activity>
-        <activity android:name=".StockDetailActivity">
+        <activity android:name=".stockDetail.StockDetailActivity">
         </activity>
         <activity android:name=".SettingsActivity">
         </activity>
-        <activity android:name=".StockAddActivity">
+        <activity android:name=".addStock.StockAddActivity">
         </activity>
-        <activity android:name=".AlertListActivity">
+        <activity android:name=".alerts.AlertListActivity">
         </activity>
-        <activity android:name=".AlertAddActivity">
+        <activity android:name=".addAlert.AlertAddActivity">
         </activity>
     </application>
 
