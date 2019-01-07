@@ -7,11 +7,18 @@
               android:theme="@style/ThemeOverlay.AppCompat.Dark"
               android:orientation="vertical"
               android:gravity="bottom">
+    <com.mcarving.stocktracker.portfolios.CustomImageView
+            android:layout_width="match_parent"
+               android:layout_height="100dp"
+               android:id="@+id/im_nav_header"
+               android:scaleType="fitXY"
+               android:src="@drawable/run"/>
 
     <TextView
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="My header title"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
-</LinearLayout>
+</LinearLayout >

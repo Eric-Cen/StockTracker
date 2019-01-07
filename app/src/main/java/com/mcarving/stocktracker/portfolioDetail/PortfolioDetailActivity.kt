@@ -5,10 +5,10 @@ import android.os.Bundle
 import com.mcarving.stocktracker.R
 
 // activity to show list of stocks in a portfolio
-class PortfolioActivity : AppCompatActivity() {
+class PortfolioDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_portfolio)
+        setContentView(R.layout.activity_portfolio_detail)
     }
 }
