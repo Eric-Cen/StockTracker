@@ -13,12 +13,20 @@ import android.util.Log
 import android.view.MenuItem
 import com.mcarving.stocktracker.R
 import com.mcarving.stocktracker.Utils
+import com.mcarving.stocktracker.api.ApiService
+import com.mcarving.stocktracker.api.PortfolioResponse
+import com.mcarving.stocktracker.api.Quote
 import com.mcarving.stocktracker.mock.TestData
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class PortfoliosActivity : AppCompatActivity() {
     //TODO enable item click to start new activity,
     //TODO implement test for mainactvity?
 
+
+    private val TAG = "PortfoliosActivity"
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mPortfolioAdapter: PortfolioAdapter
@@ -58,6 +66,30 @@ class PortfoliosActivity : AppCompatActivity() {
         mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
         setUpNavigationView()
+
+        getStockInfo()
+    }
+
+    private fun getStockInfo() {
+        val baseUrl = "https://api.iextrading.com/1.0/"
+        Log.d(TAG, "getStockInfo: $baseUrl")
+
+        val retrofitRquest  = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        val call : Call<PortfolioResponse> = retrofitRquest.queryStockList("sq", "quote")
+
+        call.enqueue(object : retrofit2.Callback<PortfolioResponse> {
+            override fun onResponse(call: Call<PortfolioResponse>, response: retrofit2.Response<PortfolioResponse>) {
+                Log.d(TAG, "onResponse: Successful Market Batch Query. Response.body=${response.body()}")
+            }
+            override fun onFailure(call: Call<PortfolioResponse>, t: Throwable) {
+                Log.d(TAG, "onFailure: Failed Call: " + t)
+            }
+        })
     }
 
     fun setUpNavigationView(){
