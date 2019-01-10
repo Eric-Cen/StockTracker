@@ -19,7 +19,7 @@ import com.mcarving.stocktracker.api.Quote
 import com.mcarving.stocktracker.mock.TestData
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class PortfoliosActivity : AppCompatActivity() {
     //TODO enable item click to start new activity,
@@ -76,17 +76,29 @@ class PortfoliosActivity : AppCompatActivity() {
 
         val retrofitRquest  = Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            //.addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(ApiService::class.java)
 
-        val call : Call<PortfolioResponse> = retrofitRquest.queryStockList("sq", "quote")
+        val call : Call<Map<String, PortfolioResponse>> = retrofitRquest.queryStockList("sq,fb,tsla", "quote")
 
-        call.enqueue(object : retrofit2.Callback<PortfolioResponse> {
-            override fun onResponse(call: Call<PortfolioResponse>, response: retrofit2.Response<PortfolioResponse>) {
+        call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
+            override fun onResponse(call: Call<Map<String, PortfolioResponse>>,
+                                    response: retrofit2.Response<Map<String, PortfolioResponse>>) {
                 Log.d(TAG, "onResponse: Successful Market Batch Query. Response.body=${response.body()}")
+
+                Log.d(TAG, "onResponse: " + response.body()?.size)
+                val resultMap = response.body()
+
+                if (resultMap != null){
+                    for((key, value) in resultMap){
+                        Log.d(TAG, "onResponse: key = $key" + " price = ${value.quote.latestPrice}")
+                    }
+                }
+
             }
-            override fun onFailure(call: Call<PortfolioResponse>, t: Throwable) {
+            override fun onFailure(call: Call<Map<String, PortfolioResponse>>, t: Throwable) {
                 Log.d(TAG, "onFailure: Failed Call: " + t)
             }
         })

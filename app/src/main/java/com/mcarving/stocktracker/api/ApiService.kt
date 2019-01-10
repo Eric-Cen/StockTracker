@@ -11,5 +11,5 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("stock/market/batch")
     abstract fun queryStockList(@Query("symbols") stocks: String,
-                                @Query("types") types: String) : Call<PortfolioResponse>
+                                @Query("types") types: String) : Call<Map<String, PortfolioResponse>>
 }

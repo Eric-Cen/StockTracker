@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mcarving.stocktracker">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:allowBackup="true"
@@ -29,6 +29,8 @@
         <activity android:name=".alerts.AlertListActivity">
         </activity>
         <activity android:name=".addAlert.AlertAddActivity">
+        </activity>
+        <activity android:name=".addPortfolio.AddPortfolioActivity">
         </activity>
     </application>
 
