@@ -12,10 +12,9 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import com.mcarving.stocktracker.R
-import com.mcarving.stocktracker.Utils
+import com.mcarving.stocktracker.util.Utils
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
-import com.mcarving.stocktracker.api.Quote
 import com.mcarving.stocktracker.mock.TestData
 import retrofit2.Call
 import retrofit2.Retrofit

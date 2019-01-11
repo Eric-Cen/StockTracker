@@ -6,6 +6,7 @@ import com.mcarving.stocktracker.BaseView
 interface StockDetailContract {
     interface View : BaseView<Presenter>{
         fun showLoadingIndicator(active : Boolean)
+        fun showSymbol()
         fun showLatestPrice()
         fun showChange()
         fun showChangePercent()

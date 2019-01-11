@@ -1,4 +1,4 @@
-package com.mcarving.stocktracker
+package com.mcarving.stocktracker.util
 
 import android.content.Context
 import android.widget.Toast
