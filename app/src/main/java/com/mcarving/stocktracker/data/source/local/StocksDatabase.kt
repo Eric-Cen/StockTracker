@@ -10,8 +10,8 @@ import com.mcarving.stocktracker.data.Stock
  * The Room database that contains The stocks table
  */
 
-@Database(entities = { Stock::class}, version = 1)
-abstract class StocksDatabase : RoomDatabase {
+@Database(entities = arrayOf(Stock::class), version = 1)
+abstract class StocksDatabase : RoomDatabase() {
     abstract fun stockDao()
 
     companion object {
@@ -22,7 +22,6 @@ abstract class StocksDatabase : RoomDatabase {
                 INSTANCE ?: synchronized(this){
                     INSTANCE ?: buildDatabase(context).also { INSTANCE = it}
                 }
-
 
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,

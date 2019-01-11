@@ -9,7 +9,7 @@ interface StocksDataSource {
 
         fun onStocksLoaded(stocks : List<Stock>)
 
-        fun onDataNotAvailable();
+        fun onDataNotAvailable()
     }
 
     interface GetStockCallback {
@@ -19,13 +19,17 @@ interface StocksDataSource {
         fun onDataNotAvailable()
     }
 
-    fun getStocks(@NonNull callback : LoadStocksCallback)
+    fun getStocksByPortfolio(@NonNull portfolio : String, @NonNull callback : LoadStocksCallback)
 
     fun getStock(@NonNull symbol : String, @NonNull callback: GetStockCallback)
 
-    fun refreshStocks()
+    fun saveStock(@NonNull stock : Stock)
 
-    fun deleteAllStocks()
+    fun refreshStock(@NonNull stock : Stock)
+    fun refreshStockList(@NonNull stocks : List<Stock>)
+
+
+    fun deleteStocksByPortfolio(@NonNull portfolio : String)
 
     fun deleteStock(@NonNull symbol: String)
 }
