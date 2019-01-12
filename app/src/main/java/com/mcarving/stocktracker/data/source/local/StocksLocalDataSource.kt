@@ -2,7 +2,6 @@ package com.mcarving.stocktracker.data.source.local
 
 import android.support.annotation.NonNull
 import android.support.annotation.VisibleForTesting
-import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.util.AppExecutors

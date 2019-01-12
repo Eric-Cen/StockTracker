@@ -15,6 +15,7 @@ import com.mcarving.stocktracker.R
 import com.mcarving.stocktracker.util.Utils
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
+import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
 import com.mcarving.stocktracker.mock.TestData
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -70,11 +71,10 @@ class PortfoliosActivity : AppCompatActivity() {
     }
 
     private fun getStockInfo() {
-        val baseUrl = "https://api.iextrading.com/1.0/"
-        Log.d(TAG, "getStockInfo: $baseUrl")
+        Log.d(TAG, "getStockInfo: ${StocksRemoteDataSource.BASE_API_URL}")
 
         val retrofitRquest  = Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(StocksRemoteDataSource.BASE_API_URL)
             //.addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
