@@ -23,13 +23,14 @@ interface StocksDataSource {
 
     fun getStock(@NonNull symbol : String, @NonNull callback: GetStockCallback)
 
-    fun saveStock(@NonNull stock : Stock)
+    fun refreshStock(@NonNull stock: Stock)
 
-    fun refreshStock(@NonNull stock : Stock)
-    fun refreshStockList(@NonNull stocks : List<Stock>)
+    fun refreshStockList(@NonNull updatedStocks: List<Stock>)
 
+    fun saveStock(@NonNull stock: Stock, @NonNull portfolio: String)
 
-    fun deleteStocksByPortfolio(@NonNull portfolio : String)
+    fun deleteStocksByPortfolio(@NonNull portfolio: String)
 
-    fun deleteStock(@NonNull symbol: String)
+    fun deleteStock(@NonNull symbol: String, @NonNull porttfolio: String)
+
 }

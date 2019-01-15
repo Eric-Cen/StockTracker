@@ -18,8 +18,8 @@ data class Stock(
     var currentPrice : Double,
     var previousClosedPrice : Double,
     var quantity : Double,
-    var purchaseDate : Date,
-    // not needed, using preference instead
-    @Transient var byPortfolio : String // tell Moshi to skip/igore this field,
+    var purchaseDate : Date
+    // not needed, using SharedPreferences instead
+//    @Transient var byPortfolio : String // tell Moshi to skip/igore this field,
                                         // used by Room database to manage portfolios
     )

@@ -9,7 +9,7 @@ class PortfolioSharedPreferences constructor(
     val gson: Gson = Gson()
 ) {
 
-    fun addSymbolToPortfolio(portfolioName: String, symbol: String) {
+    fun addSymbolToPortfolio(symbol: String, portfolioName: String) {
 
         val preferences = PreferenceManager
             .getDefaultSharedPreferences(context)
@@ -55,14 +55,13 @@ class PortfolioSharedPreferences constructor(
         return gson.fromJson(jsonText, Array<String>::class.java).asList()
     }
 
-    fun removeSymbolFromPortfolio(portfolioName: String, symbol: String)
-            : Boolean {
+    fun removeSymbolFromPortfolio(symbol: String, portfolioName: String) {
         val preferences = PreferenceManager
             .getDefaultSharedPreferences(context)
 
         // check if portfolioName already exists
         // if not, create a new portfolio with the given name
-        val jsonText = preferences.getString(portfolioName, null) ?: return true
+        val jsonText = preferences.getString(portfolioName, null)
 
         // if not null, try to add to the current list
         val currentStockSymbols: List<String> = gson.fromJson(jsonText, Array<String>::class.java).asList()

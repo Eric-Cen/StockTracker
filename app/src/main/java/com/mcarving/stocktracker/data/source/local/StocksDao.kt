@@ -18,8 +18,8 @@ interface StocksDao {
     /**
      * Select all stocks by a portfolio from stocks table
      */
-    @Query("SELECT * FROM Stocks where byPortfolio = :portfolioName")
-    fun getStocksByPortfolio(portfolioName : String) : List<Stock>
+//    @Query("SELECT * FROM Stocks where byPortfolio = :portfolioName")
+//    fun getStocksByPortfolio(portfolioName : String) : List<Stock>
     //TODO portfolioName = "%portfolio name%"
 
     /**

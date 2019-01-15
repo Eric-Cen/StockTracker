@@ -17,8 +17,7 @@ data class Quote (val symbol : String,
             latestPrice,
             -1.0,
             -1.0,
-            Date(),
-            "n/a"
+            Date()
             )
         //TODO find a better to simplify the conversion
     }
