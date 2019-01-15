@@ -1,78 +1,108 @@
 package com.mcarving.stocktracker.data.source
 
+import android.content.Context
 import android.support.annotation.NonNull
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
+import com.mcarving.stocktracker.util.NetworkHelper
 
 class StocksRepository private constructor(
-    private val mStocksLocalDataSource : StocksDataSource,
+    private val mNetworkHelper: NetworkHelper,
+    private val mStocksLocalDataSource: StocksDataSource,
     private val mStocksRemoteDataSource: StocksDataSource
-    ): StocksDataSource{
+) : StocksDataSource {
 
-     val mCachedStocks : MutableMap<String, Stock> = mutableMapOf()
-     var mCacheIsDirty = false
 
-    override fun getStocksByPortfolio(portfolio: String, callback: StocksDataSource.LoadStocksCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    /**
+     * Gets stocks from remote data source if it is available,
+     * else loads local data source
+     */
+    override fun getStocksByPortfolio(
+        context: Context,
+        portfolioName: String,
+        callback: StocksDataSource.LoadStocksCallback) {
+        if (mNetworkHelper.isNetworkAvailable(context)) {
+            // get stock information from internet
+            mStocksRemoteDataSource.getStocksByPortfolio(context, portfolioName,
+                object : StocksDataSource.LoadStocksCallback {
+
+                    override fun onStocksLoaded(stocks: List<Stock>) {
+
+                        callback.onStocksLoaded(stocks)
+                        // update stock list in local database
+                        refreshStocks(stocks)
+                    }
+
+                    override fun onDataNotAvailable() {
+                        callback.onDataNotAvailable()
+                    }
+                })
+        } else {
+            // get stock information in local database
+            mStocksLocalDataSource.getStocksByPortfolio(context, portfolioName, callback)
+        }
     }
 
-    override fun getStock(symbol: String, callback: StocksDataSource.GetStockCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getStock(
+        context: Context,
+        symbol: String,
+        callback: StocksDataSource.GetStockCallback) {
+        if (mNetworkHelper.isNetworkAvailable(context)) {
+            // get stock information from internet
+            mStocksRemoteDataSource.getStock(context, symbol, object : StocksDataSource.GetStockCallback {
+                override fun onStockLoaded(stock: Stock) {
+                    callback.onStockLoaded(stock)
+
+                    // update informaiton for the stock in lcoal database
+                    refreshStock(stock)
+                }
+
+                override fun onDataNotAvailable() {
+                    callback.onDataNotAvailable()
+                }
+            })
+        } else {
+            // get stock information from local database
+            mStocksLocalDataSource.getStock(context, symbol, callback)
+        }
     }
-
-
 
     override fun refreshStock(stock: Stock) {
-        mCacheIsDirty = true
+        mStocksLocalDataSource.refreshStock(stock)
     }
 
-    override fun refreshStockList(updatedStocks: List<Stock>) {
-        mCacheIsDirty = true
+    override fun refreshStocks(updatedStocks: List<Stock>) {
+        mStocksLocalDataSource.refreshStocks(updatedStocks)
     }
 
-    override fun saveStock(stock: Stock, portfolio: String) {
-
-        mStocksLocalDataSource.saveStock(stock)
-        //mStocksRemoteDataSource.saveStock(stock)
-
-        //Do in memory cache update to keep the app UI up to date
-        mCachedStocks[stock.symbol] = stock
+    override fun saveStock(context: Context, stock: Stock, portfolioName: String) {
+        mStocksLocalDataSource.saveStock(context, stock, portfolioName)
     }
 
-    override fun deleteStocksByPortfolio(portfolio: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun deletePortfolio(context: Context, portfolioName: String) {
+        mStocksLocalDataSource.deletePortfolio(context, portfolioName)
     }
 
     /**
      * Used to force {@link #getInstance(StocksLocalDataSource, StocksRemoteDataSource)} to create a new instance
      * next time it's called.
      */
-
-    override fun deleteStock(symbol: String, porttfolio: String) {
-
-        mStocksLocalDataSource.deleteStock(symbol, porttfolio)
-
-        mCachedStocks.remove(symbol)
-    }
-
-    fun refreshCache(stocks : List<Stock>){
-        mCachedStocks.clear()
-
-        stocks.forEach {
-            stock ->
-            mCachedStocks[stock.symbol] = stock
-        }
-
-        mCacheIsDirty = false
+    override fun deleteStock(context: Context, symbol: String, portfolioName: String) {
+        mStocksLocalDataSource.deleteStock(context, symbol, portfolioName)
     }
 
     companion object {
-        @Volatile private var INSTANCE : StocksRepository? = null
+        @Volatile
+        private var INSTANCE: StocksRepository? = null
 
-        fun getInstance(@NonNull stockslocalDataSource : StocksDataSource,
-                        @NonNull stocksRemoteDataSource: StocksDataSource) : StocksRepository =
-            INSTANCE ?: synchronized(this){
-                INSTANCE ?: StocksRepository(stockslocalDataSource, stocksRemoteDataSource).also { INSTANCE = it }
+        fun getInstance(
+            @NonNull networkHelper: NetworkHelper,
+            @NonNull stockslocalDataSource: StocksDataSource,
+            @NonNull stocksRemoteDataSource: StocksDataSource
+        ): StocksRepository =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: StocksRepository(networkHelper, stockslocalDataSource, stocksRemoteDataSource)
+                    .also { INSTANCE = it }
             }
 
         fun destroyInstance() {

@@ -8,47 +8,51 @@ import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.util.AppExecutors
 
 open class StocksLocalDataSource private constructor(
-    private val context: Context,
     private val mAppExecutors: AppExecutors,
     private val mStocksDao: StocksDao
 ) : StocksDataSource {
 
-    override fun getStocksByPortfolio(
-        @NonNull portfolio: String,
-        @NonNull callback: StocksDataSource.LoadStocksCallback
-    ) {
+    override fun getStocksByPortfolio(context: Context,
+                                      portfolioName: String,
+                                      callback: StocksDataSource.LoadStocksCallback) {
 
-        val symbols: List<String>? = PortfolioSharedPreferences(context = context)
-            .getSymbolsFromPortfolio(portfolio)
+        val symbols : List<String>? = PortfolioSharedPreferences(context = context)
+            .getSymbolsFromPortfolio(portfolioName)
 
         val runnable = Runnable {
-            symbols?.let { stockSymbols ->
-                val stocks: MutableList<Stock> = mutableListOf()
 
+            val stocks: MutableList<Stock> = mutableListOf()
+
+            symbols?.let { stockSymbols ->
                 stockSymbols.forEach { symbol ->
 
-                    val stock = mStocksDao.getStockBySymbol(symbol)
-                    stocks.add(stock)
-                }
+                    val stock: Stock? = mStocksDao.getStockBySymbol(symbol)
+                    stock?.let {
+                        stocks.add(it)
 
-                mAppExecutors.mainThread().execute {
-                    if (stocks != null) {
-                        callback.onStocksLoaded(stocks)
-                    } else {
-                        callback.onDataNotAvailable()
                     }
+
                 }
             }
-        }
+            mAppExecutors.mainThread().execute {
+                if (stocks.size >= 1) {
+                    callback.onStocksLoaded(stocks)
+                } else {
+                    callback.onDataNotAvailable()
+                }
+            }
 
+        }
         mAppExecutors.diskIO().execute(runnable)
     }
 
+    override fun getStock(context: Context,
+                          symbol: String,
+                          callback: StocksDataSource.GetStockCallback) {
 
-    override fun getStock(@NonNull symbol: String,
-                          @NonNull callback: StocksDataSource.GetStockCallback) {
         val runnable = Runnable {
             val stock: Stock? = mStocksDao.getStockBySymbol(symbol)
+
 
             mAppExecutors.mainThread().execute {
                 if (stock != null) {
@@ -63,7 +67,8 @@ open class StocksLocalDataSource private constructor(
     }
 
 
-    override fun refreshStock(@NonNull stock: Stock) {
+
+    override fun refreshStock(stock: Stock) {
         val updateRunnable = Runnable {
             mStocksDao.updateStock(stock)
         }
@@ -71,7 +76,7 @@ open class StocksLocalDataSource private constructor(
     }
 
 
-    override fun refreshStockList(@NonNull updatedStocks: List<Stock>) {
+    override fun refreshStocks(updatedStocks: List<Stock>) {
         val updateRunnable = Runnable {
             updatedStocks.forEach { stock ->
                 mStocksDao.updateStock(stock)
@@ -80,36 +85,38 @@ open class StocksLocalDataSource private constructor(
         mAppExecutors.diskIO().execute(updateRunnable)
     }
 
-    override fun saveStock(@NonNull stock: Stock, @NonNull portfolio: String) {
-        checkNotNull(stock)
+    override fun saveStock(context: Context, stock: Stock, portfolioName: String) {
         val saveRunnable = Runnable {
             mStocksDao.insertStock(stock)
         }
         mAppExecutors.diskIO().execute(saveRunnable)
 
-        // add stock symbol to portfolio saved in SharedPreferences
-        PortfolioSharedPreferences(context = context).addSymbolToPortfolio(stock.symbol, portfolio)
+        PortfolioSharedPreferences(context = context).addSymbolToPortfolio(stock.symbol, portfolioName)
 
     }
 
-    override fun deleteStocksByPortfolio(@NonNull portfolio: String) {
+    override fun deletePortfolio(context: Context, portfolioName: String) {
         // get stock symbols for the specified portfolio from SharedPreferences
         val symbols: List<String>? = PortfolioSharedPreferences(context = context)
-            .getSymbolsFromPortfolio(portfolio)
-
+            .getSymbolsFromPortfolio(portfolioName)
+        PortfolioSharedPreferences(context).removePortfolio(portfolioName)
 
         val deleteRunnable = Runnable {
+            symbols?.let { stockSymbols ->
+                stockSymbols.forEach { stockSymbol ->
 
-            symbols?.let {
-                it.forEach { stockSymbol ->
                     mStocksDao.deleteStockBySymbol(stockSymbol)
                 }
-
             }
-            //val searchBy = "%" + portfolio + "%"
-            //val stocksByPortfolio = mStocksDao.getStocksByPortfolio(searchBy)
+        }
+        mAppExecutors.diskIO().execute(deleteRunnable)
 
-            // compare portfolio column with portfolio,
+    }
+
+    //val searchBy = "%" + portfolio + "%"
+    //val stocksByPortfolio = mStocksDao.getStocksByPortfolio(searchBy)
+
+    // compare portfolio column with portfolio,
 //            val (updateList, deleteList) =
 //                    stocksByPortfolio.partition { it.byPortfolio.length > portfolio.length }
 //
@@ -133,17 +140,9 @@ open class StocksLocalDataSource private constructor(
 //                }
 //                mStocksDao.updateStock(it)
 //            }
-        }
 
 
-        mAppExecutors.diskIO().execute(deleteRunnable)
-
-        PortfolioSharedPreferences(context).removePortfolio(portfolio)
-
-    }
-
-    override fun deleteStock(@NonNull symbol: String, @NonNull porttfolio: String) {
-
+    override fun deleteStock(context: Context, symbol: String, portfolioName : String) {
         val deleteRunnable = Runnable {
             mStocksDao.deleteStockBySymbol(symbol)
         }
@@ -152,7 +151,7 @@ open class StocksLocalDataSource private constructor(
 
         // remove stock symbol from portfolio in SharedPreferences
         PortfolioSharedPreferences(context = context)
-            .removeSymbolFromPortfolio(symbol, porttfolio)
+            .removeSymbolFromPortfolio(symbol, portfolioName)
     }
 
 
@@ -161,12 +160,12 @@ open class StocksLocalDataSource private constructor(
         private var INSTANCE: StocksLocalDataSource? = null
 
         fun getInstance(
-            @NonNull context: Context,
+
             @NonNull appExecutors: AppExecutors,
             @NonNull stocksDao: StocksDao
         ): StocksLocalDataSource =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: StocksLocalDataSource(context, appExecutors, stocksDao).also { INSTANCE = it }
+                INSTANCE ?: StocksLocalDataSource(appExecutors, stocksDao).also { INSTANCE = it }
             }
 
         @VisibleForTesting
@@ -174,4 +173,5 @@ open class StocksLocalDataSource private constructor(
             INSTANCE = null
         }
     }
+
 }

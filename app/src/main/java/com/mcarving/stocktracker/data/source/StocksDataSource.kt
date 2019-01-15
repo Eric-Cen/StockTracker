@@ -1,6 +1,8 @@
 package com.mcarving.stocktracker.data.source
 
+import android.content.Context
 import android.support.annotation.NonNull
+import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Stock
 
 interface StocksDataSource {
@@ -19,18 +21,18 @@ interface StocksDataSource {
         fun onDataNotAvailable()
     }
 
-    fun getStocksByPortfolio(@NonNull portfolio : String, @NonNull callback : LoadStocksCallback)
+    fun getStocksByPortfolio(@NonNull context: Context, @NonNull portfolioName: String, @NonNull callback : LoadStocksCallback)
 
-    fun getStock(@NonNull symbol : String, @NonNull callback: GetStockCallback)
+    fun getStock(@NonNull context: Context, @NonNull symbol : String, @NonNull callback: GetStockCallback)
 
     fun refreshStock(@NonNull stock: Stock)
 
-    fun refreshStockList(@NonNull updatedStocks: List<Stock>)
+    fun refreshStocks(@NonNull updatedStocks: List<Stock>)
 
-    fun saveStock(@NonNull stock: Stock, @NonNull portfolio: String)
+    fun saveStock(@NonNull context: Context, @NonNull stock: Stock, @NonNull portfolioName : String)
 
-    fun deleteStocksByPortfolio(@NonNull portfolio: String)
+    fun deletePortfolio(@NonNull context: Context, @NonNull portfolioName: String)
 
-    fun deleteStock(@NonNull symbol: String, @NonNull porttfolio: String)
+    fun deleteStock(@NonNull context: Context, @NonNull symbol: String, @NonNull portfolioName : String)
 
 }

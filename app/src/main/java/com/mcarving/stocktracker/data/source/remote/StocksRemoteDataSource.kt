@@ -14,22 +14,20 @@ import retrofit2.Call
 import retrofit2.Response
 
 class StocksRemoteDataSource private constructor(
-    private val context: Context,
     private val mAppExecutors: AppExecutors,
     private val mApiService: ApiService
 ) : StocksDataSource {
 
-    override fun getStocksByPortfolio(
-        @NonNull portfolio: String,
-        @NonNull callback: StocksDataSource.LoadStocksCallback
-    ) {
-
-        // get sysmbols list from SharedPreferences
+    override fun getStocksByPortfolio(context: Context,
+                                      portfolioName: String,
+                                      callback: StocksDataSource.LoadStocksCallback) {
+        // get symbol string list from SharedPreferences
         val stockSymbols = PortfolioSharedPreferences(context)
-            .getSymbolsFromPortfolio(portfolio)
+            .getSymbolsFromPortfolio(portfolioName)
+
 
         // convert stockList<String> to a string for retrofit request
-        val symbolsString: String = getStringfromSymbolList(stockSymbols)
+        val symbolsString: String = getStringFromSymbolList(stockSymbols)
 
         if (symbolsString == "") {
             callback.onDataNotAvailable()
@@ -53,7 +51,6 @@ class StocksRemoteDataSource private constructor(
                                 stocks.add(stock)
                             }
                             callback.onStocksLoaded(stocks)
-
                         }
                     } else {
                         callback.onDataNotAvailable()
@@ -64,28 +61,28 @@ class StocksRemoteDataSource private constructor(
                     callback.onDataNotAvailable()
                 }
             })
-
         }
-
-
-        // run retrofit request to get stock data from internet
     }
 
-    private fun getStringfromSymbolList(@NonNull stockSymbols: List<String>?): String {
-        // expected string = "sq, aapl, msft"
+
+    private fun getStringFromSymbolList(@NonNull stockSymbols: List<String>?): String {
+
         var stockParam = ""
+
         stockSymbols?.let {
-            for ((index, value) in it.withIndex()) {
-                stockParam += if (index == it.lastIndex) value else value.plus(",")
+            for ((index, value) in stockSymbols.withIndex()) {
+                stockParam += if (index == stockSymbols.lastIndex) value else value.plus(",")
+
             }
         }
 
+        // expected string = "sq,aapl,msft"
         return stockParam
-
     }
 
-    override fun getStock(@NonNull symbol: String,
-                          @NonNull callback: StocksDataSource.GetStockCallback) {
+    override fun getStock(context: Context,
+                          symbol: String, callback:
+                          StocksDataSource.GetStockCallback) {
         val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbol, TYPES)
 
         call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
@@ -112,24 +109,24 @@ class StocksRemoteDataSource private constructor(
     }
 
 
-    override fun refreshStock(@NonNull stock: Stock) {
-    //not implemented
+    override fun refreshStock(stock: Stock) {
+        //not implemented
     }
 
-    override fun refreshStockList(@NonNull updatedStocks: List<Stock>) {
-    //not implemented
+    override fun refreshStocks(updatedStocks: List<Stock>) {
+        //not implemented
     }
 
-    override fun saveStock(@NonNull stock: Stock, @NonNull portfolio: String) {
-    //not implemented
+    override fun saveStock(context: Context, stock: Stock, portfolioName: String) {
+        //not implemented
     }
 
-    override fun deleteStocksByPortfolio(@NonNull portfolio: String) {
-    //not implemented
+    override fun deletePortfolio(context: Context, portfolioName: String) {
+        //not implemented
     }
 
-    override fun deleteStock(@NonNullsymbol: String, @NonNullporttfolio: String) {
-    //not implemented
+    override fun deleteStock(context: Context, symbol: String, portfolioName : String) {
+        //not implemented
     }
 
     companion object {
@@ -137,12 +134,11 @@ class StocksRemoteDataSource private constructor(
         private var INSTANCE: StocksRemoteDataSource? = null
 
         fun getInstance(
-            @NonNull context: Context,
             @NonNull appExecutors: AppExecutors,
             @NonNull apiService: ApiService
         ): StocksRemoteDataSource =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: StocksRemoteDataSource(context, appExecutors, apiService).also { INSTANCE = it }
+                INSTANCE ?: StocksRemoteDataSource(appExecutors, apiService).also { INSTANCE = it }
             }
 
         const val BASE_API_URL = "https://api.iextrading.com/1.0/"

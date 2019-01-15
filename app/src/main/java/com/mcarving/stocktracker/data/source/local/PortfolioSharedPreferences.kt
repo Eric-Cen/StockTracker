@@ -6,7 +6,7 @@ import com.google.gson.Gson
 
 class PortfolioSharedPreferences constructor(
     val context: Context,
-    val gson: Gson = Gson()
+    private val gson: Gson = Gson()
 ) {
 
     fun addSymbolToPortfolio(symbol: String, portfolioName: String) {
@@ -38,6 +38,7 @@ class PortfolioSharedPreferences constructor(
                 }
 
                 val newJsonText2 = gson.toJson(newList)
+
                 preferences.edit().putString(portfolioName, newJsonText2)
                 preferences.edit().apply()
             }
