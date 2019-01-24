@@ -1,22 +1,33 @@
 package com.mcarving.stocktracker.portfolios
 
+import com.mcarving.stocktracker.BasePresenter
+import com.mcarving.stocktracker.BaseView
 import com.mcarving.stocktracker.data.Portfolio
 
 interface PortfoliosContract {
 
-    interface View {
-        fun showPortfolios(portfolios: List<Portfolio>)
+    interface View : BaseView<Presenter>{
+        fun showPortfolios(portfolios: List<String>)
 
         fun showAddPortfolio()
 
         fun showPortfolioDetailUi(portfolioId: String)
+
+        fun showLoadingPortfolioError()
+
+        fun showNoPortfolios()
     }
 
-    interface UserActionsListener {
-        fun loadPortfolios(forceUpdate: Boolean)
+    interface Presenter : BasePresenter {
+
+        fun result(requestCode : Int, resultCode: Int)
+
+        fun loadPortfolios()
 
         fun addNewPortfolio()
 
-        fun openPortfolioDetails(requestedPortfolio: Portfolio)
+        fun openPortfolioDetails(requestedPortfolio: String)
+
+
     }
 }

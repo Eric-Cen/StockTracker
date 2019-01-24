@@ -1,5 +1,5 @@
 package com.mcarving.stocktracker
 
 interface BaseView<T> {
-    fun start(presenter : T)
+    fun setPresenter(presenter : T)
 }

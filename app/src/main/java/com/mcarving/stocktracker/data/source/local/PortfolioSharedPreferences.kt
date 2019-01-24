@@ -9,6 +9,24 @@ class PortfolioSharedPreferences constructor(
     private val gson: Gson = Gson()
 ) {
 
+
+
+    fun addPortfolioName(portfolioName: String){
+        val preferences = PreferenceManager
+            .getDefaultSharedPreferences(context)
+
+
+    }
+
+    fun removePortfolioName(portfolioName: String){
+
+    }
+
+    fun getPortfolioNames() : List<String>{
+
+        return listOf<String>()
+    }
+
     fun addSymbolToPortfolio(symbol: String, portfolioName: String) {
 
         val preferences = PreferenceManager
@@ -93,4 +111,7 @@ class PortfolioSharedPreferences constructor(
         prefEditor.apply()
     }
 
+    companion object {
+        private const val PORTFOlIO_NAMES = "portfolios"
+    }
 }

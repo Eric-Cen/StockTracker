@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.mcarving.stocktracker.R
 
-class PortfolioAdapter(private val portfolioList : List<String>) :
+class PortfolioAdapter(private val portfolioList : List<String>,
+                       private val itemListener: PortfoliosFragment.PortfolioItemListener) :
         RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHolder>() {
 
     // Create new views (invoked by the layout manager)
