@@ -6,8 +6,11 @@ import android.widget.Toast
 class Utils{
 
     companion object {
-        fun showToastMessage(context : Context, message : String) {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        fun showToastMessage(context : Context?, message : String) {
+            context?.let {
+                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 

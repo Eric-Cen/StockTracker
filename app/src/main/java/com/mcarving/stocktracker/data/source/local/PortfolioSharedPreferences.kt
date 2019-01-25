@@ -9,22 +9,87 @@ class PortfolioSharedPreferences constructor(
     private val gson: Gson = Gson()
 ) {
 
-
-
-    fun addPortfolioName(portfolioName: String){
+    fun addPortfolioName(portfolioName: String) {
         val preferences = PreferenceManager
             .getDefaultSharedPreferences(context)
 
+        val jsonText = preferences.getString(PORTFOlIO_NAMES, null)
+
+        if (jsonText == null) {
+            // if null, create a new portfolio with the given name
+            val newPortfolios = listOf(portfolioName)
+            val newJsonText = gson.toJson(newPortfolios)
+            preferences.edit().putString(PORTFOlIO_NAMES, newJsonText).apply()
+
+        } else {
+            // if not null, try to add to the current list
+            val currentPortfolios: List<String> = gson.fromJson(jsonText, Array<String>::class.java).asList()
+
+            //check if portfolioName is not already in the list
+            if (currentPortfolios.all { it != portfolioName }) {
+                val newList = mutableListOf<String>()
+                currentPortfolios.forEach {
+                    newList.add(it)
+                }
+
+                newList.add(portfolioName)
+
+                val newJsonText2 = gson.toJson(newList)
+
+                preferences.edit().putString(PORTFOlIO_NAMES, newJsonText2).apply()
+
+            }
+        }
+    }
+
+    fun removePortfolioName(portfolioName: String) {
+        val preferences = PreferenceManager
+            .getDefaultSharedPreferences(context)
+
+        // check if portfolioName already exists
+        // if not, create a new portfolio with the given name
+        val jsonText = preferences.getString(portfolioName, null)
+
+        // if not null, try to add to the current list
+        val currentPortfolios: List<String> = gson.fromJson(jsonText, Array<String>::class.java).asList()
+
+        //check if symbol is not already in the list
+        if (currentPortfolios.any { it == portfolioName }) {
+            // it is in the list, remove it
+            val newList = mutableListOf<String>()
+            currentPortfolios.forEach {
+
+                // exclude the portfolioName when copying to the new list
+                if (it != portfolioName) {
+                    newList.add(it)
+                }
+            }
+
+            val newJsonText2 = gson.toJson(newList)
+            preferences.edit().putString(PORTFOlIO_NAMES, newJsonText2).apply()
+
+        }
 
     }
 
-    fun removePortfolioName(portfolioName: String){
+    fun getPortfolioNames(): List<String> {
+        val preferences = PreferenceManager
+            .getDefaultSharedPreferences(context)
 
-    }
+        val jsonText = preferences.getString(PORTFOlIO_NAMES, null)
 
-    fun getPortfolioNames() : List<String>{
+        val newList = mutableListOf<String>()
 
-        return listOf<String>()
+        if (jsonText != null) {
+            // if not null, try to add to the current list
+            val currentPortfolios: List<String> = gson.fromJson(jsonText, Array<String>::class.java).asList()
+
+            currentPortfolios.forEach {
+                newList.add(it)
+            }
+        }
+
+        return newList
     }
 
     fun addSymbolToPortfolio(symbol: String, portfolioName: String) {
@@ -40,8 +105,8 @@ class PortfolioSharedPreferences constructor(
             // if null, create a new portfolio with the given name
             val newSymbolList = listOf(symbol)
             val newJsonText = gson.toJson(newSymbolList)
-            preferences.edit().putString(portfolioName, newJsonText)
-            preferences.edit().apply()
+            preferences.edit().putString(portfolioName, newJsonText).apply()
+
 
         } else {
             // if not null, try to add to the current list
@@ -55,10 +120,11 @@ class PortfolioSharedPreferences constructor(
                     newList.add(it)
                 }
 
+                newList.add(symbol)
+
                 val newJsonText2 = gson.toJson(newList)
 
-                preferences.edit().putString(portfolioName, newJsonText2)
-                preferences.edit().apply()
+                preferences.edit().putString(portfolioName, newJsonText2).apply()
             }
         }
     }
@@ -98,8 +164,8 @@ class PortfolioSharedPreferences constructor(
             }
 
             val newJsonText2 = gson.toJson(newList)
-            preferences.edit().putString(portfolioName, newJsonText2)
-            preferences.edit().apply()
+            preferences.edit().putString(portfolioName, newJsonText2).apply()
+
         }
     }
 

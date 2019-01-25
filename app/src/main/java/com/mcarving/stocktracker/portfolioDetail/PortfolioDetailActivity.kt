@@ -14,4 +14,8 @@ class PortfolioDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_portfolio_detail)
     }
+
+    companion object {
+        const val EXTRA_PORTFOLIO_NAME = "portfolio"
+    }
 }

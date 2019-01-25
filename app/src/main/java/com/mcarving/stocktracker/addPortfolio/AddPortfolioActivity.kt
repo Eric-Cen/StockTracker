@@ -10,4 +10,8 @@ class AddPortfolioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_portfolio)
     }
+
+    companion object {
+        const val REQUEST_ADD_PORTFOLIO = 101
+    }
 }

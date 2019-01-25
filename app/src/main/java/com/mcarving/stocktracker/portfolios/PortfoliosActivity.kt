@@ -15,8 +15,14 @@ import com.mcarving.stocktracker.R
 import com.mcarving.stocktracker.util.Utils
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
+import com.mcarving.stocktracker.data.source.StocksRepository
+import com.mcarving.stocktracker.data.source.local.StocksDao
+import com.mcarving.stocktracker.data.source.local.StocksDatabase
+import com.mcarving.stocktracker.data.source.local.StocksLocalDataSource
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
 import com.mcarving.stocktracker.mock.TestData
+import com.mcarving.stocktracker.util.AppExecutors
+import com.mcarving.stocktracker.util.NetworkHelper
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -27,6 +33,8 @@ class PortfoliosActivity : AppCompatActivity() {
 
 
     private val TAG = "PortfoliosActivity"
+
+    private lateinit var mPortfoliosPresenter: PortfoliosPresenter
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mPortfolioAdapter: PortfolioAdapter
@@ -39,10 +47,30 @@ class PortfoliosActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_portfolios)
 
+        var portfoliosFragment : PortfoliosContract.View? =
+            (PortfoliosContract.View) supportFragmentManager.findFragmentById(R.id.??)
+        // Create the fragment
+        if(portfoliosFragment == null) portfoliosFragment = PortfoliosFragment.newInstance()
+
+
+        val stocksDao = StocksDatabase.getInstance(applicationContext).stockDao()
+        val retrofitRquest  = Retrofit.Builder()
+            .baseUrl(StocksRemoteDataSource.BASE_API_URL)
+            //.addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        mPortfoliosPresenter = PortfoliosPresenter(applicationContext,
+            StocksRepository.getInstance(
+                NetworkHelper.getInstance(),
+                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao),
+                StocksRemoteDataSource.getInstance(AppExecutors(), retrofitRquest)
+            ),
+            portfoliosFragment)
+
         val strList = TestData.portfolioTestData()
 
-
-        val TAG = "PortfoliosActivity"
         Log.d(TAG, "onCreate: strList.size() = " + strList.size)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)

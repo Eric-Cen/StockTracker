@@ -11,7 +11,7 @@ interface PortfoliosContract {
 
         fun showAddPortfolio()
 
-        fun showPortfolioDetailUi(portfolioId: String)
+        fun showPortfolioDetailUi(portfolioName: String)
 
         fun showLoadingPortfolioError()
 

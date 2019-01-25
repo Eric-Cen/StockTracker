@@ -12,7 +12,7 @@ import com.mcarving.stocktracker.data.Stock
 
 @Database(entities = arrayOf(Stock::class), version = 1)
 abstract class StocksDatabase : RoomDatabase() {
-    abstract fun stockDao()
+    abstract fun stockDao() : StocksDao
 
     companion object {
 

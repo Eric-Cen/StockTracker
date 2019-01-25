@@ -1,48 +1,61 @@
 package com.mcarving.stocktracker.portfolios
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.startActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mcarving.stocktracker.R
+import com.mcarving.stocktracker.addPortfolio.AddPortfolioActivity
 import com.mcarving.stocktracker.data.Portfolio
+import com.mcarving.stocktracker.portfolioDetail.PortfolioDetailActivity
+import com.mcarving.stocktracker.util.Utils
+import okhttp3.internal.Util
 
-class PortfoliosFragment : Fragment(), PortfoliosContract.View {
+class PortfoliosFragment : PortfoliosContract.View, Fragment() {
 
     private lateinit var mPresenter: PortfoliosContract.Presenter
     private lateinit var mPortfoiloAdapter: PortfolioAdapter
 
     private var mItemListener = object : PortfolioItemListener{
         override fun onPortfolioClick(portFolioName: String) {
-            mPresenter.openPortfolioDetails()
+            mPresenter.openPortfolioDetails(portFolioName)
         }
     }
 
 
     override fun showPortfolios(portfolios: List<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mPortfoiloAdapter.replaceData(portfolios)
     }
 
     override fun showAddPortfolio() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       val intent = Intent(context, AddPortfolioActivity::class.java)
+        startActivityForResult(intent, AddPortfolioActivity.REQUEST_ADD_PORTFOLIO)
+
     }
 
-    override fun showPortfolioDetailUi(portfolioId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showPortfolioDetailUi(portfolioName: String) {
+
+        val intent = Intent(context, PortfolioDetailActivity::class.java)
+        intent.putExtra(PortfolioDetailActivity.EXTRA_PORTFOLIO_NAME, portfolioName)
+        startActivity(intent)
     }
 
     override fun showLoadingPortfolioError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Utils.showToastMessage(context, "failed to load portfolio list")
     }
 
     override fun showNoPortfolios() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Utils.showToastMessage(context, "There is no portfoio to show")
     }
 
 
     override fun setPresenter(presenter: PortfoliosContract.Presenter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        mPresenter = presenter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +69,10 @@ class PortfoliosFragment : Fragment(), PortfoliosContract.View {
         mPresenter.start()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        mPresenter.result(requestCode, resultCode)
+    }
+
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -63,14 +80,13 @@ class PortfoliosFragment : Fragment(), PortfoliosContract.View {
         return inflater.inflate(R.layout.fragment_portfolios, container, false)
     }
 
+    interface PortfolioItemListener{
+        fun onPortfolioClick(portFolioName : String)
+    }
 
     companion object {
         fun newInstance() : PortfoliosFragment {
             return PortfoliosFragment()
         }
-    }
-
-    interface PortfolioItemListener{
-        fun onPortfolioClick(portFolioName : String)
     }
 }
