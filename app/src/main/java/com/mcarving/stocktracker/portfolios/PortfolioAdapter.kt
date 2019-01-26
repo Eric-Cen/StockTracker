@@ -19,7 +19,6 @@ class PortfolioAdapter(private var portfolioList : List<String>,
             .inflate(R.layout.list_item_portfolio, parent, false) as View
 
         return PortfolioViewHolder(view)
-
     }
 
     override fun getItemCount(): Int {

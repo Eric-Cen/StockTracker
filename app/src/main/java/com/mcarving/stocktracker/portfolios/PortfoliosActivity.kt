@@ -16,7 +16,6 @@ import com.mcarving.stocktracker.util.Utils
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
 import com.mcarving.stocktracker.data.source.StocksRepository
-import com.mcarving.stocktracker.data.source.local.StocksDao
 import com.mcarving.stocktracker.data.source.local.StocksDatabase
 import com.mcarving.stocktracker.data.source.local.StocksLocalDataSource
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
@@ -36,24 +35,30 @@ class PortfoliosActivity : AppCompatActivity() {
 
     private lateinit var mPortfoliosPresenter: PortfoliosPresenter
 
-    private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mPortfolioAdapter: PortfolioAdapter
-    private lateinit var mViewManager: RecyclerView.LayoutManager
-
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var navigationView : NavigationView
+
+    private lateinit var viewLister : PortfoliosContract.View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_portfolios)
 
-        var portfoliosFragment : PortfoliosContract.View? =
-            (PortfoliosContract.View) supportFragmentManager.findFragmentById(R.id.??)
-        // Create the fragment
-        if(portfoliosFragment == null) portfoliosFragment = PortfoliosFragment.newInstance()
+        var portfoliosFragment = supportFragmentManager
+            .findFragmentById(R.id.contentFrame)
 
+        if(portfoliosFragment == null) {
+            portfoliosFragment = PortfoliosFragment.newInstance()
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.add(R.id.contentFrame, portfoliosFragment)
+            transaction.commit()
+        }
 
-        val stocksDao = StocksDatabase.getInstance(applicationContext).stockDao()
+        if( portfoliosFragment is PortfoliosContract.View ){
+            viewLister = portfoliosFragment
+        }
+
+        val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
         val retrofitRquest  = Retrofit.Builder()
             .baseUrl(StocksRemoteDataSource.BASE_API_URL)
             //.addConverterFactory(GsonConverterFactory.create())
@@ -67,11 +72,8 @@ class PortfoliosActivity : AppCompatActivity() {
                 StocksLocalDataSource.getInstance(AppExecutors(), stocksDao),
                 StocksRemoteDataSource.getInstance(AppExecutors(), retrofitRquest)
             ),
-            portfoliosFragment)
+            viewLister)
 
-        val strList = TestData.portfolioTestData()
-
-        Log.d(TAG, "onCreate: strList.size() = " + strList.size)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -82,22 +84,25 @@ class PortfoliosActivity : AppCompatActivity() {
         }
 
 
-        mViewManager = LinearLayoutManager(this)
-        mPortfolioAdapter = PortfolioAdapter(strList)
 
-        mRecyclerView = findViewById<RecyclerView>(R.id.rv_portfolio).apply {
-            setHasFixedSize(true)
-        }
-        mRecyclerView.layoutManager = mViewManager
-        mRecyclerView.adapter = mPortfolioAdapter
+//        val strList = TestData.portfolioTestData()
+//
+//        Log.d(TAG, "onCreate: strList.size() = " + strList.size)
+//        mViewManager = LinearLayoutManager(this)
+//        mPortfolioAdapter = PortfolioAdapter(strList)
+//
+//        mRecyclerView = findViewById<RecyclerView>(R.id.rv_portfolio).apply {
+//            setHasFixedSize(true)
+//        }
+//        mRecyclerView.layoutManager = mViewManager
+//        mRecyclerView.adapter = mPortfolioAdapter
 
-        mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-        setUpNavigationView()
+        setupDrawerContent()
 
-        getStockInfo()
     }
 
+    //Not needed - to delete
     private fun getStockInfo() {
         Log.d(TAG, "getStockInfo: ${StocksRemoteDataSource.BASE_API_URL}")
 
@@ -131,7 +136,10 @@ class PortfoliosActivity : AppCompatActivity() {
         })
     }
 
-    fun setUpNavigationView(){
+    private fun setupDrawerContent(){
+
+        mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+
         navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             // set item as selected to persist highlight

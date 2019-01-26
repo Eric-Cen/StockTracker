@@ -2,4 +2,5 @@
     <string name="app_name">StockTracker</string>
     <string name="about_us">About Us</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="empty_portfolio_message">Portfolio name cannot be empty</string>
 </resources>

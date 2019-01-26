@@ -2,9 +2,11 @@ package com.mcarving.stocktracker.portfolios
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.mcarving.stocktracker.addPortfolio.AddPortfolioActivity
 import com.mcarving.stocktracker.data.source.StocksRepository
 import com.mcarving.stocktracker.data.source.local.PortfolioSharedPreferences
+import com.mcarving.stocktracker.mock.TestData
 
 class PortfoliosPresenter constructor(
     private val mContext : Context,
@@ -33,10 +35,21 @@ class PortfoliosPresenter constructor(
         // load portfolio names from shared preferences
         val portfolioNames : List<String> = PortfolioSharedPreferences(mContext)
             .getPortfolioNames()
-        if(portfolioNames.isEmpty()){
+
+        val strList = TestData.portfolioTestData()
+
+        val TAG = "PortfoliosPresenter"
+
+        Log.d(TAG, "onCreate: strList.size() = " + strList.size)
+
+        if(strList.isEmpty()){
+        //if(portfolioNames.isEmpty()){
+
             mPortfoliosView.showNoPortfolios()
         } else {
-            mPortfoliosView.showPortfolios(portfolioNames)
+            Log.d(TAG, "loadPortfolios: loading portfolio names")
+            //mPortfoliosView.showPortfolios(portfolioNames)
+            mPortfoliosView.showPortfolios(strList)
         }
     }
 
