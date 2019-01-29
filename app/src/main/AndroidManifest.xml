@@ -25,11 +25,11 @@
         </activity>
         <activity android:name=".SettingsActivity">
         </activity>
-        <activity android:name=".addStock.StockAddActivity">
+        <activity android:name=".addStock.AddStockActivity">
         </activity>
         <activity android:name=".alerts.AlertListActivity">
         </activity>
-        <activity android:name=".addAlert.AlertAddActivity">
+        <activity android:name=".addAlert.AddAlertActivity">
         </activity>
         <activity android:name=".addPortfolio.AddPortfolioActivity">
         </activity>
