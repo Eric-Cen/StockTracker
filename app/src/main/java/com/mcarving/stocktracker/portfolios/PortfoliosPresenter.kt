@@ -41,15 +41,16 @@ class PortfoliosPresenter constructor(
         val TAG = "PortfoliosPresenter"
 
         Log.d(TAG, "onCreate: strList.size() = " + strList.size)
+        Log.d(TAG, "onCreate: portfolioNames.size() = " + portfolioNames.size)
 
-        if(strList.isEmpty()){
-        //if(portfolioNames.isEmpty()){
+        //if(strList.isEmpty()){
+        if(portfolioNames.isEmpty()){
 
             mPortfoliosView.showNoPortfolios()
         } else {
             Log.d(TAG, "loadPortfolios: loading portfolio names")
-            //mPortfoliosView.showPortfolios(portfolioNames)
-            mPortfoliosView.showPortfolios(strList)
+            mPortfoliosView.showPortfolios(portfolioNames)
+            //mPortfoliosView.showPortfolios(strList)
         }
     }
 

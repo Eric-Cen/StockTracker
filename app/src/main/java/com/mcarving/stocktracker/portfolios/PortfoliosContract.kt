@@ -16,6 +16,8 @@ interface PortfoliosContract {
         fun showLoadingPortfolioError()
 
         fun showNoPortfolios()
+
+        fun setTitle(title : String)
     }
 
     interface Presenter : BasePresenter {

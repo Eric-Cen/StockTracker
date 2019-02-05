@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar
 import com.mcarving.stocktracker.R
 
 class AddPortfolioActivity : AppCompatActivity() {
+    private lateinit var mFragment : AddPortfolioFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +24,11 @@ class AddPortfolioActivity : AppCompatActivity() {
         }
 
         if(null == savedInstanceState){
-            initFragment(AddPortfolioFragment.newInstance())
+            mFragment = AddPortfolioFragment.newInstance()
+            initFragment(mFragment)
         }
+
+        AddPortfolioPresenter(this, mFragment)
     }
 
     private fun initFragment(detailFragment : Fragment){

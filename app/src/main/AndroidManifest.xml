@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".portfolioDetail.PortfolioDetailActivity">
         </activity>
+        <activity android:name=".stocks.StocksActivity">
+        </activity>
         <activity android:name=".stockDetail.StockDetailActivity">
         </activity>
         <activity android:name=".SettingsActivity">

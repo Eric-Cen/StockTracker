@@ -7,6 +7,7 @@ import com.mcarving.stocktracker.data.Stock
 interface AddStockContract {
     interface View : BaseView<Presenter>{
         fun showEmptyStockError()
+        fun showStock(stock : Stock)
 
         fun showStocksList()
     }

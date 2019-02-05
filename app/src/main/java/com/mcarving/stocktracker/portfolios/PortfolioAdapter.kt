@@ -35,12 +35,16 @@ class PortfolioAdapter(private var portfolioList : List<String>,
         val TAG = "PortfolioAdapter"
         Log.d(TAG, "onBindViewHolder: item @ $position = ${portfolioList[position]}")
         holder.textView?.text = portfolioList[position]
+
+        holder.textView?.setOnClickListener {
+            itemListener.onPortfolioClick(portfolioList[position])
+        }
     }
 
 
     inner class PortfolioViewHolder(val view: View) : RecyclerView.ViewHolder(view){
         // holds the TextView that will add each porfolio to
-        val textView = view.findViewById<TextView>(R.id.tv_portfolio_item)
+        val textView : TextView? = view.findViewById<TextView>(R.id.tv_portfolio_item)
     }
 
 }

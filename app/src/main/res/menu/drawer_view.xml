@@ -28,7 +28,7 @@
                 android:id="@+id/nav_item7"
 
                 android:title="Portfolio  7" />
-        <item android:id="@+id/nav_list"
+        <item android:id="@+id/nav_portfolios"
               android:title="All Portfolios"
         />
     </group>

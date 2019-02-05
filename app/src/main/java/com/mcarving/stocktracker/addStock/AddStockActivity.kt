@@ -27,7 +27,7 @@ class AddStockActivity : AppCompatActivity() {
 
     }
 
-    private fun initFragment(addStockFragment : Fragment){
+    private fun initFragment(addStockFragment : AddStockFragment){
         // Add the AddStockFragment to the layout
         val transaction = supportFragmentManager.beginTransaction()
 

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mcarving.stocktracker.data.Stock
 
 class AddStockFragment : Fragment(), AddStockContract.View {
 
@@ -16,6 +17,10 @@ class AddStockFragment : Fragment(), AddStockContract.View {
 
 
     override fun showEmptyStockError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showStock(stock: Stock) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
