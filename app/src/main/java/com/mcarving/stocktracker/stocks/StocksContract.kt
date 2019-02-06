@@ -13,11 +13,15 @@ interface StocksContract {
 
         fun showStockDetailUI(symbol : String)
 
+        fun showPortfolioUI(portfolio : String)
+
+        fun showPortfolioList()
+
         fun showLoadingStockError()
 
         fun showNoStocks()
 
-        fun setTitle()
+        fun setTitle(title : String)
     }
 
     interface Presenter : BasePresenter {
@@ -28,5 +32,9 @@ interface StocksContract {
         fun addNewStock()
 
         fun openStockDetails(symbol : String)
+
+        fun openPortfolio(portfolio : String)
+
+        fun openPortfolioList()
     }
 }

@@ -31,19 +31,14 @@ class PortfoliosFragment : PortfoliosContract.View, Fragment() {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mViewManager: RecyclerView.LayoutManager
 
-
     private var mItemListener = object : PortfolioItemListener{
         override fun onPortfolioClick(portFolioName: String) {
             mPresenter.openPortfolioDetails(portFolioName)
         }
     }
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mPortfoiloAdapter = PortfolioAdapter(listOf<String>(), mItemListener)
     }
 
@@ -59,8 +54,6 @@ class PortfoliosFragment : PortfoliosContract.View, Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        //return super.onCreateView(inflater, container, savedInstanceState)
-
         val root = inflater.inflate(R.layout.fragment_portfolios, container, false)
 
         mViewManager = LinearLayoutManager(context)
@@ -82,31 +75,23 @@ class PortfoliosFragment : PortfoliosContract.View, Fragment() {
         mRecyclerView.layoutManager = mViewManager
         mRecyclerView.adapter = mPortfoiloAdapter
 
-        //TODO
         setTitle("Portfolios")
 
         return root
     }
 
     override fun showPortfolios(portfolios: List<String>) {
-
-
-        val TAG = "PortfoliosFragment"
-        Log.d(TAG, "showPortfolios: list size = " + portfolios.size)
         mPortfoiloAdapter.replaceData(portfolios)
     }
 
     override fun showAddPortfolio() {
         val intent = Intent(context, AddPortfolioActivity::class.java)
         startActivityForResult(intent, AddPortfolioActivity.REQUEST_ADD_PORTFOLIO)
-
     }
 
     override fun showPortfolioDetailUi(portfolioName: String) {
-
-        //val intent = Intent(context, PortfolioDetailActivity::class.java)
         val intent = Intent(context, StocksActivity::class.java)
-        intent.putExtra(PortfolioDetailActivity.EXTRA_PORTFOLIO_NAME, portfolioName)
+        intent.putExtra(StocksActivity.EXTRA_PORTFOLIO_NAME, portfolioName)
         startActivity(intent)
     }
 
@@ -120,7 +105,6 @@ class PortfoliosFragment : PortfoliosContract.View, Fragment() {
 
 
     override fun setPresenter(presenter: PortfoliosContract.Presenter) {
-
         mPresenter = presenter
     }
 

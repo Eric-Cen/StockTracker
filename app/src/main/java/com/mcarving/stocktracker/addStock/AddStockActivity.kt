@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import com.mcarving.stocktracker.R
 
 class AddStockActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class AddStockActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_stock)
 
+        Log.d("what5", "onCreate: AddStockActivity")
         val actionBar: ActionBar? = supportActionBar
         actionBar?.apply {
             setTitle("Add Stock")
@@ -31,7 +33,11 @@ class AddStockActivity : AppCompatActivity() {
         // Add the AddStockFragment to the layout
         val transaction = supportFragmentManager.beginTransaction()
 
-        transaction.add(R.id.contentFrame, addStockFragment)
-        transaction.commit()
+        //transaction.add(R.id.contentFrame, addStockFragment)
+        //transaction.commit()
+    }
+
+    companion object {
+        const val REQUEST_ADD_STOCK = 111
     }
 }

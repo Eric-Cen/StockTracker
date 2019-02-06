@@ -32,9 +32,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class PortfoliosActivity : AppCompatActivity() {
-    //TODO enable item click to start new activity,
-    //TODO implement test for mainactvity?
-
 
     private val TAG = "PortfoliosActivity"
 
@@ -43,7 +40,7 @@ class PortfoliosActivity : AppCompatActivity() {
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var navigationView : NavigationView
 
-    private lateinit var viewLister : PortfoliosContract.View
+    private lateinit var viewListener : PortfoliosContract.View
 
 
 
@@ -62,7 +59,7 @@ class PortfoliosActivity : AppCompatActivity() {
         }
 
         if( portfoliosFragment is PortfoliosContract.View ){
-            viewLister = portfoliosFragment
+            viewListener = portfoliosFragment
         }
 
         val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
@@ -79,7 +76,7 @@ class PortfoliosActivity : AppCompatActivity() {
                 StocksLocalDataSource.getInstance(AppExecutors(), stocksDao),
                 StocksRemoteDataSource.getInstance(AppExecutors(), retrofitRquest)
             ),
-            viewLister)
+            viewListener)
 
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -116,25 +113,22 @@ class PortfoliosActivity : AppCompatActivity() {
     }
 
     private fun updateDrawerContent() {
-
-        // get the list from SharedPreferences
-        // load the first 7 items to menus in drawer
-
-        // @+id/nav_item1" to nav_item7
-
         val navigationView : NavigationView? = findViewById<NavigationView>(R.id.nav_view)
 
         val menu : Menu? = navigationView?.menu
 
-        val portfolioNames : List<String> = PortfolioSharedPreferences(this)
+        val portfolioNames : List<String> = PortfolioSharedPreferences(applicationContext)
             .getPortfolioNames()
 
 
+        val TAG = "PortfoliosActivity"
+        Log.d(TAG, "updateDrawerContent: portfolioNames.size = " + portfolioNames.size)
         val loops = if(portfolioNames.size > 7) 7 else portfolioNames.size
 
         for(i in 1..loops){
             val menuItemId = "nav_item".plus(i)
 
+            Log.d(TAG, "updateDrawerContent: portfolioName" + i + " = " + portfolioNames[i-1])
             val id : Int = resources.getIdentifier(menuItemId, "id", packageName)
 
             val navItem : MenuItem? = menu?.findItem(id)
@@ -145,12 +139,6 @@ class PortfoliosActivity : AppCompatActivity() {
                 }
             }
         }
-
-        val navItem2 : MenuItem? = menu?.findItem(R.id.nav_item1)
-        navItem2?.apply {
-            title = portfolioNames[0]
-        }
-
     }
 
     //Not needed - to delete
@@ -202,16 +190,40 @@ class PortfoliosActivity : AppCompatActivity() {
             // for example, swap UI fragments here
             when(menuItem.itemId){
                 //TODO get the Portfolio name from the clicked item, and load stocks from the portfolio
-                R.id.nav_item1 -> Utils.showToastMessage(this, menuItem.toString())
-                R.id.nav_item2 -> Utils.showToastMessage(this, menuItem.toString())
-                R.id.nav_item3 -> Utils.showToastMessage(this, menuItem.toString())
-                R.id.nav_item4 -> Utils.showToastMessage(this, menuItem.toString())
-                R.id.nav_item5 -> Utils.showToastMessage(this, menuItem.toString())
-                R.id.nav_item6 -> Utils.showToastMessage(this, menuItem.toString())
-                R.id.nav_item7 -> Utils.showToastMessage(this, menuItem.toString())
+                R.id.nav_item1 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_item2 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_item3 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_item4 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_item5 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_item6 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_item7 -> {
+                    Utils.showToastMessage(this, menuItem.toString())
+                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
+                }
+                R.id.nav_portfolios -> {
+                    //do nothing
+                }
 
                 else -> { // Note the block
-                    print("other is selected")
+                    Utils.showToastMessage(this, "other is selected")
                 }
             }
             true
