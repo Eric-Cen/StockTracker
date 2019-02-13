@@ -141,39 +141,6 @@ class PortfoliosActivity : AppCompatActivity() {
         }
     }
 
-    //Not needed - to delete
-    private fun getStockInfo() {
-        Log.d(TAG, "getStockInfo: ${StocksRemoteDataSource.BASE_API_URL}")
-
-        val retrofitRquest  = Retrofit.Builder()
-            .baseUrl(StocksRemoteDataSource.BASE_API_URL)
-            //.addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
-
-        val call : Call<Map<String, PortfolioResponse>> = retrofitRquest.queryStockList("sq,fb,tsla", "quote")
-
-        call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
-            override fun onResponse(call: Call<Map<String, PortfolioResponse>>,
-                                    response: retrofit2.Response<Map<String, PortfolioResponse>>) {
-                Log.d(TAG, "onResponse: Successful Market Batch Query. Response.body=${response.body()}")
-
-                Log.d(TAG, "onResponse: " + response.body()?.size)
-                val resultMap = response.body()
-
-                if (resultMap != null){
-                    for((key, value) in resultMap){
-                        Log.d(TAG, "onResponse: key = $key" + " price = ${value.quote.latestPrice}")
-                    }
-                }
-
-            }
-            override fun onFailure(call: Call<Map<String, PortfolioResponse>>, t: Throwable) {
-                Log.d(TAG, "onFailure: Failed Call: " + t)
-            }
-        })
-    }
 
     private fun setupDrawerContent(){
 

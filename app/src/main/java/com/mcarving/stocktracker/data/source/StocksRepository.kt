@@ -2,6 +2,7 @@ package com.mcarving.stocktracker.data.source
 
 import android.content.Context
 import android.support.annotation.NonNull
+import android.util.Log
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
 import com.mcarving.stocktracker.util.NetworkHelper
@@ -47,13 +48,16 @@ class StocksRepository private constructor(
         context: Context,
         symbol: String,
         callback: StocksDataSource.GetStockCallback) {
+
+        val TAG = "StocksRepository"
         if (mNetworkHelper.isNetworkAvailable(context)) {
+            Log.d(TAG, "getStock: loading from internet")
             // get stock information from internet
             mStocksRemoteDataSource.getStock(context, symbol, object : StocksDataSource.GetStockCallback {
                 override fun onStockLoaded(stock: Stock) {
                     callback.onStockLoaded(stock)
 
-                    // update informaiton for the stock in lcoal database
+                    // update informaiton for the stock in local database
                     refreshStock(stock)
                 }
 
@@ -62,6 +66,7 @@ class StocksRepository private constructor(
                 }
             })
         } else {
+            Log.d(TAG, "getStock: loading from local database")
             // get stock information from local database
             mStocksLocalDataSource.getStock(context, symbol, callback)
         }

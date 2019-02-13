@@ -3,6 +3,7 @@ package com.mcarving.stocktracker.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.util.Log
 
 class NetworkHelper {
 
@@ -11,6 +12,7 @@ class NetworkHelper {
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val activeNetwork : NetworkInfo? = connectivityManager.activeNetworkInfo
+
         val isConnected : Boolean = activeNetwork?.isConnectedOrConnecting == true
 
         return isConnected

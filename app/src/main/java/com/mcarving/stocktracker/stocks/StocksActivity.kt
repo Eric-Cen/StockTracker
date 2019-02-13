@@ -172,6 +172,7 @@ class StocksActivity : AppCompatActivity(){
                     Utils.showToastMessage(this, "other is selected")
                 }
             }
+
             true
         }
     }

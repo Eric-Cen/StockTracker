@@ -34,7 +34,7 @@ class StockAdapter(private var stockList : List<Stock>,
         val stock = stockList[position]
         holder.textViewSymbol?.text = stock.symbol
         holder.textViewPrice?.text = stock.currentPrice.toString()
-        holder.textViewDate?.text = stock.previousClosedPrice.toString()
+        holder.textViewDate?.text = stock.purchaseDate.toString()
 
     }
 

@@ -7,12 +7,17 @@ import com.mcarving.stocktracker.data.Stock
 interface AddStockContract {
     interface View : BaseView<Presenter>{
         fun showEmptyStockError()
+
         fun showStock(stock : Stock)
 
-        fun showStocksList()
+        fun showStocksList(isStockAdded : Boolean)
+
+        fun showSaveError()
     }
 
     interface Presenter : BasePresenter {
-        fun saveStock(stock : Stock)
+        fun saveStock()
+
+        fun loadStock(symbol : String)
     }
 }

@@ -17,6 +17,7 @@ class AddPortfolioPresenter constructor(
         // Not implemented
     }
 
+
     override fun savePortfolio(name: String) {
 
         PortfolioSharedPreferences(context = mContext).addPortfolioName(name)

@@ -61,8 +61,7 @@ class StocksFragment : StocksContract.View, Fragment(){
             setOnClickListener {
                 Utils.showToastMessage(context, "to start add stock")
 
-                val intent = Intent(context, AddStockActivity::class.java)
-                startActivity(intent)
+                mPresenter.addNewStock()
             }
         }
 
@@ -87,8 +86,14 @@ class StocksFragment : StocksContract.View, Fragment(){
 
     override fun showAddStock() {
 
-        Log.d("what4.5", "showAddStock: ")
         val intent = Intent(context, AddStockActivity::class.java)
+//            .apply{
+//                putExtra(PORTFOLIO_NAME_EXTRA, mPortfolioName)
+//            }
+        val TAG = "StocksFragment"
+
+        Log.d(TAG, "showAddStock: portfolioname = " + mPortfolioName)
+        intent.putExtra(PORTFOLIO_NAME_EXTRA, mPortfolioName)
         startActivityForResult(intent, AddStockActivity.REQUEST_ADD_STOCK)
     }
 
@@ -103,6 +108,7 @@ class StocksFragment : StocksContract.View, Fragment(){
         val intent = Intent(context, StocksActivity::class.java)
         intent.putExtra(StocksActivity.EXTRA_PORTFOLIO_NAME, portfolio)
         startActivity(intent)
+
     }
 
     override fun showPortfolioList() {
@@ -134,20 +140,20 @@ class StocksFragment : StocksContract.View, Fragment(){
     companion object {
         const val PORTFOLIO_NAME_EXTRA = "portfolio_name"
 
-//        fun newInstance(portfolioName: String) = StocksFragment().apply {
-//            arguments = Bundle().apply {
-//                putString(PORTFOLIO_NAME_EXTRA, portfolioName)
-//            }
-//        }
-
-        fun newInstance(portfolioName : String) : StocksFragment {
-
-            val fragment = StocksFragment()
-            val bundle = Bundle()
-            bundle.putString(PORTFOLIO_NAME_EXTRA, portfolioName)
-            fragment.arguments = bundle
-
-            return fragment
+        fun newInstance(portfolioName: String) = StocksFragment().apply {
+            arguments = Bundle().apply {
+                putString(PORTFOLIO_NAME_EXTRA, portfolioName)
+            }
         }
+
+//        fun newInstance(portfolioName : String) : StocksFragment {
+//
+//            val fragment = StocksFragment()
+//            val bundle = Bundle()
+//            bundle.putString(PORTFOLIO_NAME_EXTRA, portfolioName)
+//            fragment.arguments = bundle
+//
+//            return fragment
+//        }
     }
 }

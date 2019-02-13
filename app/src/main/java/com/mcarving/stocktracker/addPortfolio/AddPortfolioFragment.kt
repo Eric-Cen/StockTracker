@@ -9,12 +9,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import com.mcarving.stocktracker.R
+import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.util.Utils
 
 class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
     private lateinit var mName: EditText
+
     private lateinit var mPresenter: AddPortfolioContract.Presenter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -31,8 +35,6 @@ class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
                 finish()
             }
         }
-
-
     }
 
     override fun onCreateView(
@@ -43,6 +45,7 @@ class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
 
         val root = inflater.inflate(R.layout.fragment_add_portfolio, container, false)
         mName = root.findViewById<EditText>(R.id.et_add_portfolio_name)
+
         return root
     }
 
@@ -58,6 +61,7 @@ class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
             finish()
         }
     }
+
 
     override fun setPresenter(presenter: AddPortfolioContract.Presenter) {
         mPresenter = presenter

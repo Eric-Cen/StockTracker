@@ -91,7 +91,7 @@ class StocksRemoteDataSource private constructor(
                 call: Call<Map<String, PortfolioResponse>>,
                 response: Response<Map<String, PortfolioResponse>>
             ) {
-                if (response.isSuccessful) {
+                if (response.isSuccessful && response.body()?.size != 0) {
                     val resultMap = response.body()
                     resultMap?.let {
                         val stock: Stock = it.getValue(symbol).quote.toStock()
