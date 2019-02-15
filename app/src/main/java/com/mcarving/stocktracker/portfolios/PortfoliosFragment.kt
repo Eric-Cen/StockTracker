@@ -16,7 +16,6 @@ import com.mcarving.stocktracker.R
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.mcarving.stocktracker.addPortfolio.AddPortfolioActivity
-import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.mock.TestData
 import com.mcarving.stocktracker.portfolioDetail.PortfolioDetailActivity
 import com.mcarving.stocktracker.stocks.StocksActivity

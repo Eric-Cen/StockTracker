@@ -7,7 +7,7 @@ import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
 import com.mcarving.stocktracker.util.NetworkHelper
 
-class StocksRepository private constructor(
+open class StocksRepository private constructor(
     private val mNetworkHelper: NetworkHelper,
     private val mStocksLocalDataSource: StocksDataSource,
     private val mStocksRemoteDataSource: StocksDataSource

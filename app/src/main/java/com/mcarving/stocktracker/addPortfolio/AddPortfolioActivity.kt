@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import com.mcarving.stocktracker.R
 
 class AddPortfolioActivity : AppCompatActivity() {
@@ -18,9 +19,8 @@ class AddPortfolioActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         val actionBar: ActionBar? = supportActionBar
         actionBar?.apply {
-            setTitle("New Portfolio")
+            title = "New Portfolio"
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
         if(null == savedInstanceState){
@@ -31,11 +31,23 @@ class AddPortfolioActivity : AppCompatActivity() {
         AddPortfolioPresenter(this, mFragment)
     }
 
+
     private fun initFragment(detailFragment : Fragment){
         // Add the AddPortfolioFragment to the layout
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.contentFrame, detailFragment)
         transaction.commit()
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 

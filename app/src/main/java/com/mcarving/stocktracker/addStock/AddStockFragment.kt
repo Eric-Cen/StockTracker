@@ -37,7 +37,6 @@ class AddStockFragment : Fragment(), AddStockContract.View {
         mButtonSearch.setOnClickListener {
 
             val searchSymbol = mSymbolSearch.text.toString()
-            //TODO check input if it is string only
 
             mPresenter.loadStock(searchSymbol)
             // retrieve stock data from internet
@@ -55,8 +54,11 @@ class AddStockFragment : Fragment(), AddStockContract.View {
         return root
     }
 
+    override fun showInputError() {
 
-    override fun showEmptyStockError() {
+    }
+
+    override fun showStockError() {
         val root = activity?.findViewById<View>(R.id.layout_add_stock_detail)
         val toast = Toast.makeText(context,"No stock information found for the symbol", Toast.LENGTH_LONG )
 
@@ -66,17 +68,13 @@ class AddStockFragment : Fragment(), AddStockContract.View {
             toast.show()
         }
 
-        mTextViewName.setText("")
-        mTextViewSymbol.setText("")
-        mTextViewPrice.setText("")
+        mTextViewName.text = getString(R.string.company)
+        mTextViewSymbol.text = getString(R.string.symbol)
+        mTextViewPrice.text = getString(R.string.price)
 
         mButtonAdd.isClickable = false
         mButtonAdd.alpha = 0.5f
 
-//        Snackbar.make(activity!!.findViewById(R.id.layout_add_stock_detail),
-//            "No stock information found for the symbol",
-//            Snackbar.LENGTH_LONG).show()
-//        Utils.showToastMessage(context, "No stock information found for the symbol")
     }
 
     override fun showSaveError() {
@@ -91,9 +89,15 @@ class AddStockFragment : Fragment(), AddStockContract.View {
     }
 
     override fun showStock(stock: Stock) {
-        mTextViewName.setText(stock.companyName)
-        mTextViewSymbol.setText(stock.symbol)
-        mTextViewPrice.setText(stock.currentPrice.toString())
+        val company = "Company: " + stock.companyName
+        mTextViewName.text = company
+
+
+        val symbol = "Symbol: ".plus(stock.symbol)
+        mTextViewSymbol.text = symbol
+
+        val price = "Price: " + stock.currentPrice.toString()
+        mTextViewPrice.text = price
 
         mButtonAdd.isClickable = true
         mButtonAdd.alpha = 1.0f

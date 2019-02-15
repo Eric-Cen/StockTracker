@@ -12,8 +12,8 @@
             android:layout_height="wrap_content"
             android:lines="1"
             android:inputType="text"
-            android:hint="AAPL"
-
+            android:hint="@string/hint"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:layout_marginTop="32dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,20 +41,20 @@
                 android:id="@+id/tv_add_stock_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Company Name: "
+                android:text="@string/company"
 
         />
         <TextView
                 android:id="@+id/tv_add_stock_symbol"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Symbol: "
+                android:text="@string/symbol"
                 android:layout_below="@id/tv_add_stock_name"/>
         <TextView
                 android:id="@+id/tv_add_stock_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Price: "
+                android:text="@string/price"
                 android:layout_below="@id/tv_add_stock_symbol"/>
         <Button
                 android:id="@+id/bt_add_stock_add"

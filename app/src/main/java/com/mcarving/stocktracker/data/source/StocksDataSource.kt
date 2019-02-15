@@ -2,7 +2,6 @@ package com.mcarving.stocktracker.data.source
 
 import android.content.Context
 import android.support.annotation.NonNull
-import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Stock
 
 interface StocksDataSource {

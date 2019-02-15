@@ -8,9 +8,6 @@ import java.util.*
 @Entity(tableName = "purchases")
 data class Purchase(
 
-    @PrimaryKey(autoGenerate = true)
-    var id : Int,
-
     var symbol : String,
 
     var portfolioName : String,
@@ -19,14 +16,18 @@ data class Purchase(
 
     var purchaseDate : Date,
 
-    var sellDate : Date,
+    var sellDate : Date?,
 
     var purchasePrice : Double,
 
-    var sellPrice : Double,
+    var sellPrice : Double?,
 
-    var TrailingDate : Date,
+    var TrailingDate : Date?,
 
-    var TrailingPercent : Double
+    var TrailingPercent : Double?
 
-    )
+    ) {
+
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0
+}

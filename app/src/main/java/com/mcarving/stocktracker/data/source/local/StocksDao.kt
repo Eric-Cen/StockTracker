@@ -15,12 +15,6 @@ interface StocksDao {
     @Query("SELECT * FROM Stocks")
     fun getStocks() : List<Stock>
 
-    /**
-     * Select all stocks by a portfolio from stocks table
-     */
-//    @Query("SELECT * FROM Stocks where byPortfolio = :portfolioName")
-//    fun getStocksByPortfolio(portfolioName : String) : List<Stock>
-    //TODO portfolioName = "%portfolio name%"
 
     /**
      * Select a stock by symbol
@@ -32,7 +26,7 @@ interface StocksDao {
      * Insert a stock in the database. If the stock already exists, replace it.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertStock(stock : Stock)
+    fun insert(stock : Stock)
 
     /**
      * Update a stock
@@ -41,7 +35,7 @@ interface StocksDao {
      * @return the number of stocks updated. This should always be 1.
      */
     @Update
-    fun updateStock(stock : Stock) : Int
+    fun update(stock : Stock) : Int
 
 
     /**
@@ -52,11 +46,7 @@ interface StocksDao {
     @Query("DELETE FROM Stocks WHERE symbol = :stockSymbol")
     fun deleteStockBySymbol(stockSymbol : String) : Int
 
-    /**
-     * Delete stocks by a specific portfolio
-     */
-//    @Query("DELETE FROM Stocks WHERE byPortfolio LIKE :portfolioName")
-//    fun deleteStocksByPortfolio(portfolioName: String) : Int
-    //TODO search = "%portfolio name%"
 
+    @Query("DELETE FROM STOCKS")
+    fun deleteAll()
 }

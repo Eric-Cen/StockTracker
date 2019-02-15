@@ -25,11 +25,8 @@ class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
         super.onActivityCreated(savedInstanceState)
         val fab: FloatingActionButton? = activity?.findViewById<FloatingActionButton>(R.id.fab_edit_portfolio_done)
 
-        val TAG = "AddPortfolioFragment"
-
         fab?.setImageResource(R.drawable.ic_done)
         fab?.setOnClickListener {
-            Log.d(TAG, "onActivityCreated: saving portfolio")
             mPresenter.savePortfolio(mName.text.toString())
             activity?.apply{
                 finish()
@@ -37,29 +34,28 @@ class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val root = inflater.inflate(R.layout.fragment_add_portfolio, container, false)
         mName = root.findViewById<EditText>(R.id.et_add_portfolio_name)
-
         return root
     }
 
 
-    override fun showEmptyPortfolioError() {
-        Snackbar.make(mName, getString(R.string.empty_portfolio_message), Snackbar.LENGTH_LONG).show()
-    }
-
     override fun showPortfoliosList() {
         activity?.apply {
             setResult(Activity.RESULT_OK)
-
             finish()
         }
+    }
+
+
+    override fun showSaveError(message: String) {
+        Utils.showToastMessage(context, message)
     }
 
 
@@ -69,8 +65,6 @@ class AddPortfolioFragment : Fragment(), AddPortfolioContract.View {
 
 
     companion object {
-        const val ARGUMENT_EDIT_PORTFOLIO_ID = "EDIT_PORTFOLIO_ID"
-
         fun newInstance(): AddPortfolioFragment {
             return AddPortfolioFragment()
         }

@@ -32,7 +32,7 @@ class AddStockActivity : AppCompatActivity() {
 
         val actionBar: ActionBar? = supportActionBar
         actionBar?.apply {
-            setTitle("Add Stock")
+            title = "Add Stock"
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -42,8 +42,6 @@ class AddStockActivity : AppCompatActivity() {
         }
 
         val portFolioName = intent.getStringExtra(StocksFragment.PORTFOLIO_NAME_EXTRA)
-        val TAG = "AddStockActivity"
-        Log.d(TAG, "onCreate: portfolioName = " + portFolioName)
 
         val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
         val retrofitRquest  = Retrofit.Builder()
@@ -82,7 +80,6 @@ class AddStockActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_ADD_STOCK = 111
-        const val RESULT_ADD_STOCK = 112
     }
 
 

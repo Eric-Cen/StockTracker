@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.annotation.NonNull
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
-import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.data.source.local.PortfolioSharedPreferences

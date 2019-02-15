@@ -7,9 +7,9 @@ import com.mcarving.stocktracker.data.Stock
 interface AddPortfolioContract {
 
     interface View : BaseView<Presenter> {
-        fun showEmptyPortfolioError()
-
         fun showPortfoliosList()
+
+        fun showSaveError(message : String)
     }
 
     interface Presenter : BasePresenter {

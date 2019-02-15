@@ -70,7 +70,7 @@ open class StocksLocalDataSource private constructor(
 
     override fun refreshStock(stock: Stock) {
         val updateRunnable = Runnable {
-            mStocksDao.updateStock(stock)
+            mStocksDao.update(stock)
         }
         mAppExecutors.diskIO().execute(updateRunnable)
     }
@@ -79,7 +79,7 @@ open class StocksLocalDataSource private constructor(
     override fun refreshStocks(updatedStocks: List<Stock>) {
         val updateRunnable = Runnable {
             updatedStocks.forEach { stock ->
-                mStocksDao.updateStock(stock)
+                mStocksDao.update(stock)
             }
         }
         mAppExecutors.diskIO().execute(updateRunnable)
@@ -87,7 +87,7 @@ open class StocksLocalDataSource private constructor(
 
     override fun saveStock(context: Context, stock: Stock, portfolioName: String) {
         val saveRunnable = Runnable {
-            mStocksDao.insertStock(stock)
+            mStocksDao.insert(stock)
         }
         mAppExecutors.diskIO().execute(saveRunnable)
 
@@ -138,7 +138,7 @@ open class StocksLocalDataSource private constructor(
 //
 //                    it.byPortfolio = it.byPortfolio.replace(afterComma, "")
 //                }
-//                mStocksDao.updateStock(it)
+//                mStocksDao.update(it)
 //            }
 
 

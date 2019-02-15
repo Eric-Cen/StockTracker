@@ -23,14 +23,14 @@ interface PurchaseDao{
      * Insert a purchase into the database. If the purchase already exists, replace it
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPurchase(purchase: Purchase)
+    fun insert(purchase: Purchase)
 
     /**
      * Update a purchase
      * @return the number of purchases updated.  This should always be 1
      */
     @Update
-    fun updatePurchase(purchase: Purchase) : Int
+    fun update(purchase: Purchase) : Int
 
     /**
      * delete a stock by symbol
@@ -44,4 +44,7 @@ interface PurchaseDao{
      */
     @Query("DELETE FROM purchases where portfolioName = :portfolio")
     fun deletePurchasesByPortfolio(portfolio: String) :  Int
+
+    @Query("DELETE FROM PURCHASES")
+    fun deleteAll()
 }

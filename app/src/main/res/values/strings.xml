@@ -5,4 +5,8 @@
     <string name="empty_portfolio_message">Portfolio name cannot be empty</string>
     <string name="add_stock">Add</string>
     <string name="search">Search</string>
+    <string name="company">Company:</string>
+    <string name="symbol">Symbol:</string>
+    <string name="price">Price:</string>
+    <string name="hint">AAPL</string>
 </resources>
