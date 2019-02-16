@@ -1,9 +1,10 @@
 package com.mcarving.stocktracker.data.source
 
 import android.arch.persistence.room.TypeConverter
+import com.google.gson.Gson
 import java.util.*
 
-class Converters {
+class DateConverter {
     @TypeConverter
     fun fromTimestamp(value: Long?): Date?{
         return value?.let{Date(it)}
@@ -13,4 +14,5 @@ class Converters {
     fun dateToTimestamp(date : Date?): Long?{
         return date?.time?.toLong()
     }
+
 }
