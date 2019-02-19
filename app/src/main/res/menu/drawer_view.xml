@@ -34,7 +34,7 @@
     </group>
     <item android:title="Other">
         <menu>
-            <item android:id="@+id/settings"
+            <item android:id="@+id/nav_settings"
                   android:title="Settings"/>
             <item android:id="@+id/nav_about_us"
                   android:title="@string/about_us"/>

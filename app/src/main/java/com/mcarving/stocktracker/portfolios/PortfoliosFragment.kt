@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.mcarving.stocktracker.Settings.SettingsActivity
 import com.mcarving.stocktracker.addPortfolio.AddPortfolioActivity
 import com.mcarving.stocktracker.mock.TestData
 import com.mcarving.stocktracker.portfolioDetail.PortfolioDetailActivity
@@ -120,6 +121,11 @@ class PortfoliosFragment : PortfoliosContract.View, Fragment() {
     }
 
 
+    override fun showSettings() {
+        val intent = Intent(context, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun setPresenter(presenter: PortfoliosContract.Presenter) {
         mPresenter = presenter
     }
@@ -169,6 +175,9 @@ class PortfoliosFragment : PortfoliosContract.View, Fragment() {
                     }
                     R.id.nav_portfolios -> {
                         //do nothing
+                    }
+                    R.id.nav_settings -> {
+                        mPresenter.openSettings()
                     }
 
                     else -> { // Note the block

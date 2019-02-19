@@ -22,6 +22,8 @@ interface PortfoliosContract {
         fun updateDrawerContent(portfolioNames : List<String>)
 
         fun setupDrawerContent()
+
+        fun showSettings()
     }
 
     interface Presenter : BasePresenter {
@@ -33,6 +35,8 @@ interface PortfoliosContract {
         fun addNewPortfolio()
 
         fun openPortfolioDetails(requestedPortfolio: String)
+
+        fun openSettings()
 
 
     }

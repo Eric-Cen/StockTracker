@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/sync_periods"
+            android:entryValues="@array/sync_periods_values"
+            android:iconSpaceReserved="false"
+            android:key="UPDATE_INTERVAL"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="Update Interval"/>
+
+    <Preference
+            android:defaultValue="09:30"
+            android:iconSpaceReserved="false"
+            android:key="START_TIME"
+            android:title="Start Time"/>
+
+    <Preference
+            android:defaultValue="16:00"
+            android:iconSpaceReserved="false"
+            android:key="END_TIME"
+            android:title="End Time"/>
+
+    <Preference
+            android:iconSpaceReserved="false"
+            android:key="SETTING_SHARE"
+            android:selectable="true"
+            android:title="Share Portfolio"/>
+
+    <Preference
+            android:iconSpaceReserved="false"
+            android:key="SETTING_PRIVACY_POLICY"
+            android:selectable="true"
+            android:title="Privacy Policy"/>
+</PreferenceScreen>

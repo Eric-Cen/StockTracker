@@ -67,6 +67,10 @@ class PortfoliosPresenter constructor(
         mPortfoliosView.showPortfolioDetailUi(requestedPortfolio)
     }
 
+    override fun openSettings() {
+        mPortfoliosView.showSettings()
+    }
+
     fun getPortfolioName() {
         var nameList = listOf<String>()
         mStocksRepository.getPortfolioNames(object : StocksDataSource.LoadPortfolioNamesCallback{
