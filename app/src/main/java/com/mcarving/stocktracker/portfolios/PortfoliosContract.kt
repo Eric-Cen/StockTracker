@@ -18,6 +18,10 @@ interface PortfoliosContract {
         fun showNoPortfolios()
 
         fun setTitle(title : String)
+
+        fun updateDrawerContent(portfolioNames : List<String>)
+
+        fun setupDrawerContent()
     }
 
     interface Presenter : BasePresenter {

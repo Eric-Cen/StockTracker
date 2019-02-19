@@ -22,6 +22,10 @@ interface StocksContract {
         fun showNoStocks()
 
         fun setTitle(title : String)
+
+        fun updateDrawerContent(portfolioNames : List<String>)
+
+        fun setupDrawerContent()
     }
 
     interface Presenter : BasePresenter {

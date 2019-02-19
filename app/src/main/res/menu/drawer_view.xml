@@ -4,36 +4,38 @@
         <item
                 android:id="@+id/nav_item1"
 
-                android:title="Portfolio 1" />
+                android:title="" />
         <item
                 android:id="@+id/nav_item2"
-                android:title="Portfolio  2" />
+                android:title="" />
         <item
                 android:id="@+id/nav_item3"
 
-                android:title="Portfolio  3" />
+                android:title="" />
         <item
                 android:id="@+id/nav_item4"
 
-                android:title="Portfolio  4" />
+                android:title="" />
         <item
                 android:id="@+id/nav_item5"
 
-                android:title="Portfolio  5" />
+                android:title="" />
         <item
                 android:id="@+id/nav_item6"
 
-                android:title="Portfolio  6" />
+                android:title="" />
         <item
                 android:id="@+id/nav_item7"
 
-                android:title="Portfolio  7" />
+                android:title="" />
         <item android:id="@+id/nav_portfolios"
               android:title="All Portfolios"
         />
     </group>
     <item android:title="Other">
         <menu>
+            <item android:id="@+id/settings"
+                  android:title="Settings"/>
             <item android:id="@+id/nav_about_us"
                   android:title="@string/about_us"/>
             <item android:id="@+id/nav_privacy_policy"

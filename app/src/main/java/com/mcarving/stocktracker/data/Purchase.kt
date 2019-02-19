@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
 import java.util.*
 
-@Entity(tableName = "purchases")
+@Entity(tableName = Purchase.TABLE_NAME)
 data class Purchase(
 
     var symbol : String,
@@ -30,4 +30,8 @@ data class Purchase(
 
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0
+
+    companion object {
+        const val TABLE_NAME = "purchases"
+    }
 }

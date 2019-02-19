@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.mcarving.stocktracker.addPortfolio.AddPortfolioActivity
+import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.data.source.StocksRepository
-import com.mcarving.stocktracker.data.source.local.PortfolioSharedPreferences
 import com.mcarving.stocktracker.mock.TestData
 
 class PortfoliosPresenter constructor(
@@ -20,6 +20,8 @@ class PortfoliosPresenter constructor(
 
     override fun start() {
         loadPortfolios()
+        mPortfoliosView.setupDrawerContent()
+        getPortfolioName()
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
@@ -32,17 +34,28 @@ class PortfoliosPresenter constructor(
     }
 
     override fun loadPortfolios() {
-        // load portfolio names from shared preferences
-        val portfolioNames : List<String> = PortfolioSharedPreferences(mContext)
-            .getPortfolioNames()
+        mStocksRepository.getPortfolioNames(
+            object : StocksDataSource.LoadPortfolioNamesCallback{
+                override fun onPortfolioNamesLoaded(names: List<String>) {
+                    mPortfoliosView.showPortfolios(names)
+                }
 
-        if(portfolioNames.isEmpty()){
+                override fun onDataNotAvailable() {
+                    mPortfoliosView.showNoPortfolios()
+                }
+            })
 
-            mPortfoliosView.showNoPortfolios()
-        } else {
-            mPortfoliosView.showPortfolios(portfolioNames)
-            //mPortfoliosView.showPortfolios(strList)
-        }
+//        // load portfolio names from shared preferences
+//        val portfolioNames : List<String> = PortfolioSharedPreferences(mContext)
+//            .getPortfolioNames()
+//
+//        if(portfolioNames.isEmpty()){
+//
+//            mPortfoliosView.showNoPortfolios()
+//        } else {
+//            mPortfoliosView.showPortfolios(portfolioNames)
+//            //mPortfoliosView.showPortfolios(strList)
+//        }
     }
 
 
@@ -54,5 +67,17 @@ class PortfoliosPresenter constructor(
         mPortfoliosView.showPortfolioDetailUi(requestedPortfolio)
     }
 
+    fun getPortfolioName() {
+        var nameList = listOf<String>()
+        mStocksRepository.getPortfolioNames(object : StocksDataSource.LoadPortfolioNamesCallback{
+            override fun onPortfolioNamesLoaded(names: List<String>) {
+                mPortfoliosView.updateDrawerContent(names)
+            }
+
+            override fun onDataNotAvailable() {
+                mPortfoliosView.updateDrawerContent(listOf<String>())
+            }
+        })
+    }
 
 }

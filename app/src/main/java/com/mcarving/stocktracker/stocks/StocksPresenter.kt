@@ -6,7 +6,6 @@ import com.mcarving.stocktracker.addStock.AddStockActivity
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.data.source.StocksRepository
-import com.mcarving.stocktracker.data.source.local.PortfolioSharedPreferences
 import com.mcarving.stocktracker.util.Utils
 import okhttp3.internal.Util
 
@@ -34,6 +33,8 @@ class StocksPresenter constructor(
 
     override fun start() {
         loadStocks()
+        mStocksView.setupDrawerContent()
+        getPortfolioName()
     }
 
     override fun loadStocks() {
@@ -75,5 +76,18 @@ class StocksPresenter constructor(
 
     override fun openPortfolioList() {
         mStocksView.showPortfolioList()
+    }
+
+    fun getPortfolioName() {
+        var nameList = listOf<String>()
+        mStocksRepository.getPortfolioNames(object : StocksDataSource.LoadPortfolioNamesCallback{
+            override fun onPortfolioNamesLoaded(names: List<String>) {
+                mStocksView.updateDrawerContent(names)
+            }
+
+            override fun onDataNotAvailable() {
+                mStocksView.updateDrawerContent(listOf<String>())
+            }
+        })
     }
 }

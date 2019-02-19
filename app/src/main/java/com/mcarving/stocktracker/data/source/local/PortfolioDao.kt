@@ -8,22 +8,30 @@ import com.mcarving.stocktracker.data.source.ListConverter
 interface PortfolioDao {
 
     /**
+     * Counts the number of portfolios in the table
+     *
+     * @return the number of portfolios
+     */
+    @Query("SELECT COUNT(*) FROM" + Portfolio.TABLE_NAME)
+    fun count() : Int
+
+    /**
      * Select all portfolios from portfolios table
      */
-    @Query("SELECT * FROM portfolios")
+    @Query("SELECT * FROM " + Portfolio.TABLE_NAME)
     fun getPortfolios() : List<Portfolio>
 
     /**
      * Select all portfolio names from portfolios table
      */
-    @Query("SELECT name FROM portfolios")
+    @Query("SELECT name FROM " + Portfolio.TABLE_NAME)
     fun getPortfolioNames() : List<String>
 
     /**
      * Select symbols by portfolio name
      */
     @TypeConverters(ListConverter::class)
-    @Query("SELECT * FROM portfolios WHERE name = :portfolioName")
+    @Query("SELECT * FROM " + Portfolio.TABLE_NAME + " WHERE name = :portfolioName")
     fun getPortfolioByName(portfolioName : String) : Portfolio
 
 
@@ -46,14 +54,14 @@ interface PortfolioDao {
      * Delete a Portfolio entry by name
      * @return the number of porfolios deleted. This should always be 1.
      */
-    @Query("DELETE FROM portfolios where name = :portfolioName")
+    @Query("DELETE FROM " + Portfolio.TABLE_NAME + " where name = :portfolioName")
     fun deletePortfolioByName(portfolioName : String) : Int
 
 
     /**
      * delete all content for the portfolios table
      */
-    @Query("DELETE FROM portfolios")
+    @Query("DELETE FROM " + Portfolio.TABLE_NAME)
     fun deleteAll()
 
 }

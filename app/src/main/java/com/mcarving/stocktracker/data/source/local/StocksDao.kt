@@ -12,14 +12,14 @@ interface StocksDao {
     /**
      * Select all stocks from the stocks table
      */
-    @Query("SELECT * FROM Stocks")
+    @Query("SELECT * FROM " + Stock.TABLE_NAME)
     fun getStocks() : List<Stock>
 
 
     /**
      * Select a stock by symbol
      */
-    @Query("SELECT * FROM Stocks where symbol = :stockSymbol")
+    @Query("SELECT * FROM " + Stock.TABLE_NAME + " where symbol = :stockSymbol")
     fun getStockBySymbol(stockSymbol: String) : Stock
 
     /**
@@ -43,10 +43,10 @@ interface StocksDao {
      *
      * @return the number of stocks deleted. This should always be 1.
      */
-    @Query("DELETE FROM Stocks WHERE symbol = :stockSymbol")
+    @Query("DELETE FROM " + Stock.TABLE_NAME + " WHERE symbol = :stockSymbol")
     fun deleteStockBySymbol(stockSymbol : String) : Int
 
 
-    @Query("DELETE FROM STOCKS")
+    @Query("DELETE FROM " + Stock.TABLE_NAME)
     fun deleteAll()
 }

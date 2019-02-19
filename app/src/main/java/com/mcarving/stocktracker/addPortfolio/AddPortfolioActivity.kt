@@ -7,6 +7,15 @@ import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.mcarving.stocktracker.R
+import com.mcarving.stocktracker.api.ApiService
+import com.mcarving.stocktracker.data.source.StocksRepository
+import com.mcarving.stocktracker.data.source.local.StocksDatabase
+import com.mcarving.stocktracker.data.source.local.StocksLocalDataSource
+import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
+import com.mcarving.stocktracker.util.AppExecutors
+import com.mcarving.stocktracker.util.NetworkHelper
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class AddPortfolioActivity : AppCompatActivity() {
     private lateinit var mFragment : AddPortfolioFragment
@@ -28,7 +37,22 @@ class AddPortfolioActivity : AppCompatActivity() {
             initFragment(mFragment)
         }
 
-        AddPortfolioPresenter(this, mFragment)
+        val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
+        val portfolioDao = StocksDatabase.getDatabase(applicationContext).portfolioDao()
+
+        val retrofitRquest  = Retrofit.Builder()
+            .baseUrl(StocksRemoteDataSource.BASE_API_URL)
+            //.addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        AddPortfolioPresenter(this, mFragment,
+            StocksRepository.getInstance(
+                NetworkHelper.getInstance(),
+                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao, portfolioDao),
+                StocksRemoteDataSource.getInstance(AppExecutors(), portfolioDao, retrofitRquest))
+            )
     }
 
 

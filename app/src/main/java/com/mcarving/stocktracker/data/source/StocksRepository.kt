@@ -3,6 +3,7 @@ package com.mcarving.stocktracker.data.source
 import android.content.Context
 import android.support.annotation.NonNull
 import android.util.Log
+import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
 import com.mcarving.stocktracker.util.NetworkHelper
@@ -53,7 +54,8 @@ open class StocksRepository private constructor(
         if (mNetworkHelper.isNetworkAvailable(context)) {
             Log.d(TAG, "getStock: loading from internet")
             // get stock information from internet
-            mStocksRemoteDataSource.getStock(context, symbol, object : StocksDataSource.GetStockCallback {
+            mStocksRemoteDataSource.getStock(context, symbol,
+                object : StocksDataSource.GetStockCallback {
                 override fun onStockLoaded(stock: Stock) {
                     callback.onStockLoaded(stock)
 
@@ -80,20 +82,29 @@ open class StocksRepository private constructor(
         mStocksLocalDataSource.refreshStocks(updatedStocks)
     }
 
-    override fun saveStock(context: Context, stock: Stock, portfolioName: String) {
-        mStocksLocalDataSource.saveStock(context, stock, portfolioName)
-    }
-
-    override fun deletePortfolio(context: Context, portfolioName: String) {
-        mStocksLocalDataSource.deletePortfolio(context, portfolioName)
+    override fun saveStock(stock: Stock, portfolioName: String) {
+        mStocksLocalDataSource.saveStock(stock, portfolioName)
     }
 
     /**
      * Used to force {@link #getInstance(StocksLocalDataSource, StocksRemoteDataSource)} to create a new instance
      * next time it's called.
      */
-    override fun deleteStock(context: Context, symbol: String, portfolioName: String) {
-        mStocksLocalDataSource.deleteStock(context, symbol, portfolioName)
+    override fun deleteStock(symbol: String, portfolioName: String) {
+        mStocksLocalDataSource.deleteStock(symbol, portfolioName)
+    }
+
+    override fun deletePortfolio(portfolioName: String) {
+        mStocksLocalDataSource.deletePortfolio(portfolioName)
+    }
+
+    override fun savePortfolio(portfolio: Portfolio) {
+        mStocksLocalDataSource.savePortfolio(portfolio)
+    }
+
+
+    override fun getPortfolioNames(callback: StocksDataSource.LoadPortfolioNamesCallback) {
+        mStocksLocalDataSource.getPortfolioNames(callback)
     }
 
     companion object {

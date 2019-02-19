@@ -19,8 +19,8 @@ import com.mcarving.stocktracker.addPortfolio.AddPortfolioActivity
 import com.mcarving.stocktracker.util.Utils
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
+import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.data.source.StocksRepository
-import com.mcarving.stocktracker.data.source.local.PortfolioSharedPreferences
 import com.mcarving.stocktracker.data.source.local.StocksDatabase
 import com.mcarving.stocktracker.data.source.local.StocksLocalDataSource
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
@@ -38,7 +38,6 @@ class PortfoliosActivity : AppCompatActivity() {
     private lateinit var mPortfoliosPresenter: PortfoliosPresenter
 
     private lateinit var mDrawerLayout: DrawerLayout
-    private lateinit var navigationView : NavigationView
 
     private lateinit var viewListener : PortfoliosContract.View
 
@@ -62,7 +61,10 @@ class PortfoliosActivity : AppCompatActivity() {
             viewListener = portfoliosFragment
         }
 
+
+        val portfolioDao = StocksDatabase.getDatabase(applicationContext).portfolioDao()
         val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
+
         val retrofitRquest  = Retrofit.Builder()
             .baseUrl(StocksRemoteDataSource.BASE_API_URL)
             //.addConverterFactory(GsonConverterFactory.create())
@@ -70,132 +72,19 @@ class PortfoliosActivity : AppCompatActivity() {
             .build()
             .create(ApiService::class.java)
 
+        val repository = StocksRepository.getInstance(
+            NetworkHelper.getInstance(),
+            StocksLocalDataSource.getInstance(AppExecutors(), stocksDao, portfolioDao),
+            StocksRemoteDataSource.getInstance(AppExecutors(), portfolioDao, retrofitRquest))
+
         mPortfoliosPresenter = PortfoliosPresenter(applicationContext,
-            StocksRepository.getInstance(
-                NetworkHelper.getInstance(),
-                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao),
-                StocksRemoteDataSource.getInstance(AppExecutors(), retrofitRquest)
-            ),
+            repository,
             viewListener)
-
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
-        }
-
-
-
-//        val strList = TestData.portfolioTestData()
-//
-//        Log.d(TAG, "onCreate: strList.size() = " + strList.size)
-//        mViewManager = LinearLayoutManager(this)
-//        mPortfolioAdapter = PortfolioAdapter(strList)
-//
-//        mRecyclerView = findViewById<RecyclerView>(R.id.rv_portfolio).apply {
-//            setHasFixedSize(true)
-//        }
-//        mRecyclerView.layoutManager = mViewManager
-//        mRecyclerView.adapter = mPortfolioAdapter
-
-
-        setupDrawerContent()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        updateDrawerContent()
-    }
-
-    private fun updateDrawerContent() {
-        val navigationView : NavigationView? = findViewById<NavigationView>(R.id.nav_view)
-
-        val menu : Menu? = navigationView?.menu
-
-        val portfolioNames : List<String> = PortfolioSharedPreferences(applicationContext)
-            .getPortfolioNames()
-
-
-        val TAG = "PortfoliosActivity"
-        Log.d(TAG, "updateDrawerContent: portfolioNames.size = " + portfolioNames.size)
-        val loops = if(portfolioNames.size > 7) 7 else portfolioNames.size
-
-        for(i in 1..loops){
-            val menuItemId = "nav_item".plus(i)
-
-            Log.d(TAG, "updateDrawerContent: portfolioName" + i + " = " + portfolioNames[i-1])
-            val id : Int = resources.getIdentifier(menuItemId, "id", packageName)
-
-            val navItem : MenuItem? = menu?.findItem(id)
-
-            if(i<= portfolioNames.size) {
-                navItem?.apply {
-                    title = portfolioNames[i - 1]
-                }
-            }
-        }
-    }
-
-
-    private fun setupDrawerContent(){
 
         mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
-        navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            // set item as selected to persist highlight
-            menuItem.isChecked = true
-            // close drawer when item is tapped
-            mDrawerLayout.closeDrawers()
-
-            // Add code here to update the UI based on the item selected
-            // for example, swap UI fragments here
-            when(menuItem.itemId){
-                //TODO get the Portfolio name from the clicked item, and load stocks from the portfolio
-                R.id.nav_item1 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_item2 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_item3 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_item4 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_item5 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_item6 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_item7 -> {
-                    Utils.showToastMessage(this, menuItem.toString())
-                    mPortfoliosPresenter.openPortfolioDetails(menuItem.toString())
-                }
-                R.id.nav_portfolios -> {
-                    //do nothing
-                }
-
-                else -> { // Note the block
-                    Utils.showToastMessage(this, "other is selected")
-                }
-            }
-            true
-        }
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 

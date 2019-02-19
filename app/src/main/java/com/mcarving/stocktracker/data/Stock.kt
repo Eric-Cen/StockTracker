@@ -8,7 +8,7 @@ import java.util.*
 /**
  * Immutable model class for a Stock
  */
-@Entity(tableName = "stocks" )
+@Entity(tableName = Stock.TABLE_NAME )
 data class Stock(
     @PrimaryKey
     @NonNull
@@ -18,6 +18,9 @@ data class Stock(
     var currentPrice : Double,
     var previousClosedPrice : Double,
     var quantity : Double,
-    var purchaseDate : Date
+    var purchaseDate : Date){
 
-    )
+    companion object {
+        const val TABLE_NAME = "stocks"
+    }
+}

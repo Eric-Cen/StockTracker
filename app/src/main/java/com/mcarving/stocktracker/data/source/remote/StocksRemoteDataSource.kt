@@ -4,9 +4,10 @@ import android.content.Context
 import android.support.annotation.NonNull
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
+import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.StocksDataSource
-import com.mcarving.stocktracker.data.source.local.PortfolioSharedPreferences
+import com.mcarving.stocktracker.data.source.local.PortfolioDao
 import com.mcarving.stocktracker.util.AppExecutors
 import org.xmlpull.v1.XmlPullParser.TYPES
 import retrofit2.Call
@@ -14,6 +15,7 @@ import retrofit2.Response
 
 class StocksRemoteDataSource private constructor(
     private val mAppExecutors: AppExecutors,
+    private val mPortfolioDao: PortfolioDao,
     private val mApiService: ApiService
 ) : StocksDataSource {
 
@@ -21,25 +23,27 @@ class StocksRemoteDataSource private constructor(
                                       portfolioName: String,
                                       callback: StocksDataSource.LoadStocksCallback) {
         // get symbol string list from SharedPreferences
-        val stockSymbols = PortfolioSharedPreferences(context)
-            .getSymbolsFromPortfolio(portfolioName)
+//        val stockSymbols = PortfolioSharedPreferences(context)
+//            .getSymbolsFromPortfolio(portfolioName)
+        val runnable = Runnable {
+            val portfolio = mPortfolioDao.getPortfolioByName(portfolioName)
 
 
-        // convert stockList<String> to a string for retrofit request
-        val symbolsString: String = getStringFromSymbolList(stockSymbols)
+                val stockSymbols = portfolio.symbolList
 
-        if (symbolsString == "") {
-            callback.onDataNotAvailable()
-        } else {
-            val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbolsString, TYPES)
 
-            call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
+                // convert stockList<String> to a string for retrofit request
+                val symbolsString: String = getStringFromSymbolList(stockSymbols)
 
-                override fun onResponse(
-                    call: Call<Map<String, PortfolioResponse>>,
-                    response: Response<Map<String, PortfolioResponse>>
-                ) {
-                    if (response.isSuccessful) {
+                if (symbolsString == "") {
+                    mAppExecutors.mainThread().execute {
+                        callback.onDataNotAvailable()
+                    }
+                } else {
+                    val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbolsString, TYPES)
+
+                    val response = call.execute()
+                    if (response.isSuccessful && response.body()?.size !=0) {
                         val resultMap = response.body()
                         resultMap?.let {
 
@@ -49,18 +53,51 @@ class StocksRemoteDataSource private constructor(
                                 val stock: Stock = portfolioResponse.quote.toStock()
                                 stocks.add(stock)
                             }
-                            callback.onStocksLoaded(stocks)
+                            mAppExecutors.mainThread().execute {
+                                callback.onStocksLoaded(stocks)
+                            }
                         }
                     } else {
-                        callback.onDataNotAvailable()
+                        mAppExecutors.mainThread().execute {
+                            callback.onDataNotAvailable()
+                        }
                     }
+
                 }
 
-                override fun onFailure(call: Call<Map<String, PortfolioResponse>>, t: Throwable) {
-                    callback.onDataNotAvailable()
-                }
-            })
+
+
+//                call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
+//
+//                    override fun onResponse(
+//                        call: Call<Map<String, PortfolioResponse>>,
+//                        response: Response<Map<String, PortfolioResponse>>
+//                    ) {
+//                        if (response.isSuccessful) {
+//                            val resultMap = response.body()
+//                            resultMap?.let {
+//
+//                                val stocks: MutableList<Stock> = mutableListOf()
+//                                it.forEach { _, portfolioResponse ->
+//
+//                                    val stock: Stock = portfolioResponse.quote.toStock()
+//                                    stocks.add(stock)
+//                                }
+//                                callback.onStocksLoaded(stocks)
+//                            }
+//                        } else {
+//                            callback.onDataNotAvailable()
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<Map<String, PortfolioResponse>>, t: Throwable) {
+//                        callback.onDataNotAvailable()
+//                    }
+//                })
+
         }
+
+        mAppExecutors.networkIO().execute(runnable)
     }
 
 
@@ -79,32 +116,49 @@ class StocksRemoteDataSource private constructor(
         return stockParam
     }
 
-    override fun getStock(context: Context,
-                          symbol: String, callback:
+    override fun getStock(context: Context, symbol: String, callback:
                           StocksDataSource.GetStockCallback) {
-        val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbol, TYPES)
+        val runnable = Runnable {
+            val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbol, TYPES)
 
-        call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
-
-            override fun onResponse(
-                call: Call<Map<String, PortfolioResponse>>,
-                response: Response<Map<String, PortfolioResponse>>
-            ) {
-                if (response.isSuccessful && response.body()?.size != 0) {
-                    val resultMap = response.body()
-                    resultMap?.let {
-                        val stock: Stock = it.getValue(symbol).quote.toStock()
+            val response = call.execute()
+            if (response.isSuccessful && response.body()?.size != 0) {
+                val resultMap = response.body()
+                resultMap?.let {
+                    val stock: Stock = it.getValue(symbol).quote.toStock()
+                    mAppExecutors.mainThread().execute {
                         callback.onStockLoaded(stock)
                     }
-                } else {
+                }
+            } else {
+                mAppExecutors.mainThread().execute {
                     callback.onDataNotAvailable()
                 }
             }
+        }
 
-            override fun onFailure(call: Call<Map<String, PortfolioResponse>>, t: Throwable) {
-                callback.onDataNotAvailable()
-            }
-        })
+        mAppExecutors.networkIO().execute(runnable)
+//        call.enqueue(object : retrofit2.Callback<Map<String, PortfolioResponse>> {
+//
+//            override fun onResponse(
+//                call: Call<Map<String, PortfolioResponse>>,
+//                response: Response<Map<String, PortfolioResponse>>
+//            ) {
+//                if (response.isSuccessful && response.body()?.size != 0) {
+//                    val resultMap = response.body()
+//                    resultMap?.let {
+//                        val stock: Stock = it.getValue(symbol).quote.toStock()
+//                        callback.onStockLoaded(stock)
+//                    }
+//                } else {
+//                    callback.onDataNotAvailable()
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Map<String, PortfolioResponse>>, t: Throwable) {
+//                callback.onDataNotAvailable()
+//            }
+//        })
     }
 
 
@@ -116,17 +170,27 @@ class StocksRemoteDataSource private constructor(
         //not implemented
     }
 
-    override fun saveStock(context: Context, stock: Stock, portfolioName: String) {
+    override fun saveStock(stock: Stock, portfolioName: String) {
         //not implemented
     }
 
-    override fun deletePortfolio(context: Context, portfolioName: String) {
+    override fun deleteStock(symbol: String, portfolioName : String) {
         //not implemented
     }
 
-    override fun deleteStock(context: Context, symbol: String, portfolioName : String) {
+    override fun savePortfolio(portfolio: Portfolio) {
         //not implemented
     }
+
+    override fun getPortfolioNames(callback: StocksDataSource.LoadPortfolioNamesCallback) {
+        //not implemented
+    }
+
+    override fun deletePortfolio(portfolioName: String) {
+        //not implemented
+    }
+
+
 
     companion object {
         @Volatile
@@ -134,10 +198,11 @@ class StocksRemoteDataSource private constructor(
 
         fun getInstance(
             @NonNull appExecutors: AppExecutors,
+            @NonNull portfolioDao: PortfolioDao,
             @NonNull apiService: ApiService
         ): StocksRemoteDataSource =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: StocksRemoteDataSource(appExecutors, apiService).also { INSTANCE = it }
+                INSTANCE ?: StocksRemoteDataSource(appExecutors, portfolioDao, apiService).also { INSTANCE = it }
             }
 
         const val BASE_API_URL = "https://api.iextrading.com/1.0/"

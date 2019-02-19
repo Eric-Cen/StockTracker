@@ -34,7 +34,7 @@ class AddStockPresenter constructor(
 
         stockToAdd?.let {
             //save to room database
-            mStocksRepository.saveStock(mContext, it, mPortfolioName)
+            mStocksRepository.saveStock(it, mPortfolioName)
             mAddStockView.showStocksList(true)
         }
     }
