@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.annotation.NonNull
 import android.support.annotation.VisibleForTesting
 import com.mcarving.stocktracker.data.Portfolio
+import com.mcarving.stocktracker.data.Purchase
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.util.AppExecutors
@@ -11,7 +12,8 @@ import com.mcarving.stocktracker.util.AppExecutors
 open class StocksLocalDataSource private constructor(
     private val mAppExecutors: AppExecutors,
     private val mStocksDao: StocksDao,
-    private val mPortfolioDao: PortfolioDao
+    private val mPortfolioDao: PortfolioDao,
+    private val mPurchaseDao: PurchaseDao
 ) : StocksDataSource {
 
     override fun getStocksByPortfolio(context: Context,
@@ -197,6 +199,28 @@ open class StocksLocalDataSource private constructor(
         mAppExecutors.diskIO().execute(runnable)
     }
 
+
+    override fun savePurchase(purchase : Purchase) {
+        val runnableSave = Runnable {
+            mPurchaseDao.insert(purchase)
+        }
+
+        mAppExecutors.diskIO().execute(runnableSave)
+    }
+
+    override fun getPurchase(symbol: String, callback: StocksDataSource.loadPurchaseCallback) {
+
+        //TODO
+    }
+
+    override fun deletePurchase(id : Int) {
+        val deleteRunnable = Runnable {
+            mPurchaseDao.deletePurchaceById(id)
+        }
+
+        mAppExecutors.diskIO().execute(deleteRunnable)
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: StocksLocalDataSource? = null
@@ -205,10 +229,11 @@ open class StocksLocalDataSource private constructor(
 
             @NonNull appExecutors: AppExecutors,
             @NonNull stocksDao: StocksDao,
-            @NonNull portfolioDao: PortfolioDao
+            @NonNull portfolioDao: PortfolioDao,
+            @NonNull purchaseDao: PurchaseDao
         ): StocksLocalDataSource =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: StocksLocalDataSource(appExecutors, stocksDao, portfolioDao).also { INSTANCE = it }
+                INSTANCE ?: StocksLocalDataSource(appExecutors, stocksDao, portfolioDao, purchaseDao).also { INSTANCE = it }
             }
 
         @VisibleForTesting

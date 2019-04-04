@@ -12,7 +12,7 @@ interface PortfolioDao {
      *
      * @return the number of portfolios
      */
-    @Query("SELECT COUNT(*) FROM" + Portfolio.TABLE_NAME)
+    @Query("SELECT COUNT() FROM" + Portfolio.TABLE_NAME)
     fun count() : Int
 
     /**

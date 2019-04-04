@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
+import android.util.Log
 import com.mcarving.stocktracker.data.Portfolio
 import com.mcarving.stocktracker.data.Purchase
 import com.mcarving.stocktracker.data.Stock
@@ -28,12 +29,15 @@ abstract class StocksDatabase : RoomDatabase() {
      * Inserts the dummy data into the database if it is current empty.
      */
     private fun populateInitialData(){
+        val TAG = "StocksDatabase"
         Executors.newSingleThreadScheduledExecutor().execute {
-            if(portfolioDao().count() == 0) {
+            val values = portfolioDao().getPortfolios()
+            if(values.isEmpty()) {
                 beginTransaction()
                 try{
                     for (i in 1..7) {
                         val name = "Portfolio".plus(i)
+                        android.util.Log.d(TAG, "populateInitialData: name = $name")
                         val portfolio = Portfolio(name, mutableListOf(""))
                         portfolioDao().insert(portfolio)
                     }
@@ -41,6 +45,8 @@ abstract class StocksDatabase : RoomDatabase() {
                 } finally {
                     endTransaction()
                 }
+            } else {
+                Log.d(TAG, "populateInitialData: values.size = " + values.size)
             }
         }
     }

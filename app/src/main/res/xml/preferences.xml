@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
@@ -16,13 +17,25 @@
             android:defaultValue="09:30"
             android:iconSpaceReserved="false"
             android:key="START_TIME"
-            android:title="Start Time"/>
+            android:title="Start Time: 9:30AM EST"/>
 
     <Preference
             android:defaultValue="16:00"
             android:iconSpaceReserved="false"
             android:key="END_TIME"
-            android:title="End Time"/>
+            android:title="End Time: 4:00PM EST"/>
+    <SwitchPreference
+            android:iconSpaceReserved="false"
+            android:key="notifications"
+            android:title="Enable Alarm Notifications"/>
+    <Preference
+            android:iconSpaceReserved="false"
+            android:key="LAST_RUN"
+            android:title="Last Run:"/>
+    <Preference
+            android:iconSpaceReserved="false"
+            android:key="NEXT_RUN"
+            android:title="Next Run:"/>
 
     <Preference
             android:iconSpaceReserved="false"

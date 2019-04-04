@@ -46,6 +46,8 @@ class AddStockActivity : AppCompatActivity() {
         val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
         val portfolioDao = StocksDatabase.getDatabase(applicationContext).portfolioDao()
 
+        val purchaseDao = StocksDatabase.getDatabase(applicationContext).purchaseDao()
+
         val retrofitRquest  = Retrofit.Builder()
             .baseUrl(StocksRemoteDataSource.BASE_API_URL)
             //.addConverterFactory(GsonConverterFactory.create())
@@ -56,7 +58,7 @@ class AddStockActivity : AppCompatActivity() {
         AddStockPresenter(this, mFragment, portFolioName,
             StocksRepository.getInstance(
                 NetworkHelper.getInstance(),
-                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao, portfolioDao),
+                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao, portfolioDao, purchaseDao),
                 StocksRemoteDataSource.getInstance(AppExecutors(), portfolioDao, retrofitRquest))
         )
     }

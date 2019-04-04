@@ -57,6 +57,8 @@ class StocksActivity : AppCompatActivity(){
 
         val stocksDao = StocksDatabase.getDatabase(applicationContext).stockDao()
         val portfolioDao = StocksDatabase.getDatabase(applicationContext).portfolioDao()
+        val purchaseDao = StocksDatabase.getDatabase(applicationContext).purchaseDao()
+
 
         val retrofitRquest  = Retrofit.Builder()
             .baseUrl(StocksRemoteDataSource.BASE_API_URL)
@@ -68,7 +70,7 @@ class StocksActivity : AppCompatActivity(){
         mStocksPresenter = StocksPresenter(applicationContext,
             StocksRepository.getInstance(
                 NetworkHelper.getInstance(),
-                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao, portfolioDao),
+                StocksLocalDataSource.getInstance(AppExecutors(), stocksDao, portfolioDao, purchaseDao),
                 StocksRemoteDataSource.getInstance(AppExecutors(), portfolioDao, retrofitRquest)
             ),
             viewListener, mPortfolioName)

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull
 import com.mcarving.stocktracker.api.ApiService
 import com.mcarving.stocktracker.api.PortfolioResponse
 import com.mcarving.stocktracker.data.Portfolio
+import com.mcarving.stocktracker.data.Purchase
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.StocksDataSource
 import com.mcarving.stocktracker.data.source.local.PortfolioDao
@@ -190,7 +191,17 @@ class StocksRemoteDataSource private constructor(
         //not implemented
     }
 
+    override fun savePurchase(purchase : Purchase) {
+        //not implemented
+    }
 
+    override fun getPurchase(symbol: String, callback: StocksDataSource.loadPurchaseCallback) {
+        //not implemented
+    }
+
+    override fun deletePurchase(id : Int) {
+        //not implemented
+    }
 
     companion object {
         @Volatile

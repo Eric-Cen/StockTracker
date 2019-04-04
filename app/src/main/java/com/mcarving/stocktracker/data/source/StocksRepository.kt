@@ -3,7 +3,9 @@ package com.mcarving.stocktracker.data.source
 import android.content.Context
 import android.support.annotation.NonNull
 import android.util.Log
+import com.mcarving.stocktracker.R.string.symbol
 import com.mcarving.stocktracker.data.Portfolio
+import com.mcarving.stocktracker.data.Purchase
 import com.mcarving.stocktracker.data.Stock
 import com.mcarving.stocktracker.data.source.remote.StocksRemoteDataSource
 import com.mcarving.stocktracker.util.NetworkHelper
@@ -102,9 +104,22 @@ open class StocksRepository private constructor(
         mStocksLocalDataSource.savePortfolio(portfolio)
     }
 
-
     override fun getPortfolioNames(callback: StocksDataSource.LoadPortfolioNamesCallback) {
         mStocksLocalDataSource.getPortfolioNames(callback)
+    }
+
+    override fun savePurchase(purchase: Purchase) {
+        mStocksLocalDataSource.savePurchase(purchase)
+    }
+
+    override fun getPurchase(symbol: String, callback: StocksDataSource.loadPurchaseCallback) {
+
+        mStocksLocalDataSource.getPurchase(symbol, callback)
+    }
+
+    override fun deletePurchase(id : Int) {
+
+        mStocksLocalDataSource.deletePurchase(id)
     }
 
     companion object {
