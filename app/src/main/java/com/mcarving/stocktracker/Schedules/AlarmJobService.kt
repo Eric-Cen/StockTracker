@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.mcarving.stocktracker.R
+import com.mcarving.stocktracker.portfolios.PortfoliosActivity
 import com.mcarving.stocktracker.stocks.StocksActivity
 import java.util.*
 
@@ -34,7 +35,6 @@ class AlarmJobService : JobService() {
             .getDefaultSharedPreferences(applicationContext).edit()
         val calendar = AppUtil.getCurrentTime()
         pEditor.putString(AlarmScheduler.PREF_LAST_SCHEDULE_RuN, calendar.time.toString())
-        pEditor.putString("LAST_RUN", calendar.time.toString())
         pEditor.apply()
 
         mNotificationManager = applicationContext
@@ -48,15 +48,13 @@ class AlarmJobService : JobService() {
     }
 
     private fun doMyWork() {
-
-        Log.d("what", "in onHandleIntent: ")
         deliverNotification()
     }
 
 
     private fun deliverNotification() {
 
-        val contentIntent = Intent(applicationContext, StocksActivity::class.java)
+        val contentIntent = Intent(applicationContext, PortfoliosActivity::class.java)
 
         val contentPendingInt = PendingIntent.getActivity(
             applicationContext,
@@ -79,8 +77,6 @@ class AlarmJobService : JobService() {
         // Deliver the notification
         mNotificationManager.notify(REQUEST_CODE, builder.build())
 
-
-        Log.d("what", "onHandleIntent: " + Calendar.getInstance().time)
     }
 
 

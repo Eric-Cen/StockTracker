@@ -114,7 +114,6 @@ class AlarmScheduler {
         val calendar = AppUtil.getCurrentTime()
         calendar.timeInMillis += nextAlarmInMs
         pEditor.putString(PREF_NEXT_SCHEDULE_RUN, calendar.time.toString())
-        pEditor.putString("NEXT_RUN", calendar.time.toString())
         pEditor.putBoolean(PREF_ALARM_STATUS, true)
         pEditor.apply()
 
@@ -148,7 +147,6 @@ class AlarmScheduler {
         val pedit = PreferenceManager.getDefaultSharedPreferences(context).edit()
         pedit.putBoolean(PREF_ALARM_STATUS, false)
         pedit.putString(PREF_NEXT_SCHEDULE_RUN, "Not scheduled")
-        pedit.putString("NEXT_RUN", "Not scheduled")
 
         pedit.apply()
     }

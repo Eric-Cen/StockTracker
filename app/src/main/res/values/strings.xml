@@ -10,4 +10,6 @@
     <string name="price">Price:</string>
     <string name="hint">AAPL</string>
     <string name="pref_notifications">notifications</string>
+    <string name="pref_key_next_run">NEXT_RUN</string>
+    <string name="pref_key_last_run">LAST_RUN</string>
 </resources>

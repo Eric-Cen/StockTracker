@@ -25,21 +25,8 @@ import java.util.*
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private fun setPreferenceSummary(preference : Preference, value : Object){
-        val stringValue = value.toString()
-        preference.setSummary(stringValue)
-    }
-
     override fun onCreatePreferences(p0: Bundle?, p1: String?) {
-
         addPreferencesFromResource(R.xml.preferences)
-
-        val sharedPreferences = preferenceScreen.sharedPreferences
-        val count = preferenceScreen.preferenceCount
-        for (i in 0..count){
-            //val p = preferenceScreen.
-
-        }
 
         readFromPreference()
     }
@@ -61,26 +48,21 @@ class SettingsFragment : PreferenceFragmentCompat(),
                     getString(R.string.pref_notifications), false) ?: false
 
                 if(toTurnAlarmOn){
-                    //TODO turn on alarm
+                    //turn on alarm
                     setAlarm()
-
                 } else {
-                    //TODO turn off alarm
+                    //turn off alarm
                     cancelAlarm()
                 }
-
             }
         }
-
     }
 
     fun cancelAlarm(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             AlarmScheduler.getInstance().cancelSchedule(preferenceManager.context)
         } else{
-
             val myIntent = Intent(preferenceManager.context, AlarmJobService::class.java)
-
             val pendingIntent = PendingIntent.getService(preferenceManager.context,
                 REQUEST_CODE,
                 myIntent,
@@ -91,12 +73,10 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
             alarmManager?.apply {
                 cancel(pendingIntent)
-                //statusTextView.text = "alarm is cancelled."
-                //TODO reset the field for next alarm time
             }
-
         }
 
+        readFromPreference()
     }
 
     fun setAlarm(){
@@ -150,17 +130,25 @@ class SettingsFragment : PreferenceFragmentCompat(),
         if(alarmStatus){
             //statusTextView.text="Alarm is scheduled."
         } else {
-            //statusTextView.text="no alarm scheduled."
+            val nextRunPreference = preferenceManager
+                .findPreference(resources.getString(R.string.pref_key_next_run))
+            nextRunPreference.setTitle("Next Run: Not Scheduled")
         }
 
         val lastStatus = preferences.getString(AlarmScheduler.PREF_LAST_SCHEDULE_RuN, "Not Available")
         lastStatus.apply {
             //lastTextView.text = this
+            val lastRunPreference = preferenceManager
+                .findPreference(resources.getString(R.string.pref_key_last_run))
+            lastRunPreference.setTitle("Last Run: " + this)
         }
 
         val nextStatus = preferences.getString(AlarmScheduler.PREF_NEXT_SCHEDULE_RUN, "Not Available")
         nextStatus.apply {
             //nextTextView.text = this
+            val nextRunPreference = preferenceManager
+                .findPreference(resources.getString(R.string.pref_key_next_run))
+            nextRunPreference.setTitle("Next Run: " + this)
         }
 
     }

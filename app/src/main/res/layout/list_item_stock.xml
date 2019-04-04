@@ -7,8 +7,7 @@
 
                                              android:layout_marginTop="16dp"
                                              android:layout_marginStart="16dp"
-                                             android:layout_marginEnd="16dp"
->
+                                             android:layout_marginEnd="16dp">
     <TextView
             android:id="@+id/tv_stocks_symbol"
             android:layout_width="wrap_content"
@@ -17,25 +16,96 @@
             tools:text="symbol"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/tv_stocks_price"
-    />
+            app:layout_constraintRight_toLeftOf="@+id/tv_stocks_price"/>
     <TextView
             android:id="@+id/tv_stocks_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="price"
             app:layout_constraintLeft_toRightOf="@+id/tv_stocks_symbol"
-            app:layout_constraintRight_toLeftOf="@+id/tv_stocks_date"
-            app:layout_constraintTop_toTopOf="@+id/tv_stocks_symbol"
-    />
+            app:layout_constraintRight_toLeftOf="@+id/tv_stocks_change_price"
+            app:layout_constraintTop_toTopOf="@+id/tv_stocks_symbol"/>
+
     <TextView
-            android:id="@+id/tv_stocks_date"
+            android:id="@+id/tv_stocks_change_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Change $$"
+            app:layout_constraintTop_toTopOf="@+id/tv_stocks_symbol"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/tv_stocks_price"/>
+
+    <TextView
+            android:id="@+id/tv_stocks_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Google Inc."
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_symbol"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_symbol"/>
+
+    <TextView
+            android:id="@+id/tv_stocks_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="3:30PM"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_price"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_price"/>
+    <TextView
+            android:id="@+id/tv_stocks_change_percentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            tools:text="date"
-            app:layout_constraintTop_toTopOf="@+id/tv_stocks_symbol"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/tv_stocks_price"
+            tools:text="+0.3%"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_change_price"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_change_price"
     />
+
+    <TextView
+            android:id="@+id/tv_stocks_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="purchased shares: 2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_company"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_company"
+
+    />
+
+    <TextView
+            android:id="@+id/tv_stocks_purchase_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="purchased at $180"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_time"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_time"
+    />
+
+    <TextView
+            android:id="@+id/tv_stocks_purchase_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="4/5/2019"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_change_percentage"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_change_percentage"
+    />
+
+    <TextView
+            android:id="@+id/tv_stocks_profit_loss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="P/L Since Purchase: +3.23 (+6%)"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_quantity"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_quantity"
+    />
+
+    <TextView
+            android:id="@+id/tv_stocks_profit_loss_trailing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="P/L Trailing 8%: +3.23 (+6%)"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stocks_profit_loss"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_stocks_profit_loss"
+    />
+
+
+
 </android.support.constraint.ConstraintLayout>

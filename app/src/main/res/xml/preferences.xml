@@ -30,11 +30,11 @@
             android:title="Enable Alarm Notifications"/>
     <Preference
             android:iconSpaceReserved="false"
-            android:key="LAST_RUN"
+            android:key="@string/pref_key_last_run"
             android:title="Last Run:"/>
     <Preference
             android:iconSpaceReserved="false"
-            android:key="NEXT_RUN"
+            android:key="@string/pref_key_next_run"
             android:title="Next Run:"/>
 
     <Preference
