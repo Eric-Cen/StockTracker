@@ -15,10 +15,8 @@ data class Quote (val symbol : String,
         return Stock(symbol,
             companyName,
             latestPrice,
-            -1.0,
-            -1.0,
-            Date()
-            )
-        //TODO find a better to simplify the conversion
+            latestUpdate,
+            change,
+            changePercent)
     }
 }

@@ -13,12 +13,11 @@ data class Stock(
     @PrimaryKey
     @NonNull
     var symbol : String,
-
     var companyName : String,
-    var currentPrice : Double,
-    var previousClosedPrice : Double,
-    var quantity : Double,
-    var purchaseDate : Date){
+    var latestPrice : Double,
+    var latestUpdate : Long,
+    var change : Double,
+    var changePercent : Double){
 
     companion object {
         const val TABLE_NAME = "stocks"

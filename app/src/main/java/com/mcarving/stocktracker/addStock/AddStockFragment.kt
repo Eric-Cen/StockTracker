@@ -96,7 +96,7 @@ class AddStockFragment : Fragment(), AddStockContract.View {
         val symbol = "Symbol: ".plus(stock.symbol)
         mTextViewSymbol.text = symbol
 
-        val price = "Price: " + stock.currentPrice.toString()
+        val price = "Price: " + stock.latestPrice.toString()
         mTextViewPrice.text = price
 
         mButtonAdd.isClickable = true
