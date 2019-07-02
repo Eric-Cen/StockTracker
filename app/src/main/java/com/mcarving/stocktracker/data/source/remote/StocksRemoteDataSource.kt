@@ -41,7 +41,8 @@ class StocksRemoteDataSource private constructor(
                         callback.onDataNotAvailable()
                     }
                 } else {
-                    val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbolsString, TYPES)
+                    val call: Call<Map<String, PortfolioResponse>> =
+                        mApiService.queryStockList(symbolsString, TYPES, API_KEY)
 
                     val response = call.execute()
                     if (response.isSuccessful && response.body()?.size !=0) {
@@ -120,7 +121,7 @@ class StocksRemoteDataSource private constructor(
     override fun getStock(context: Context, symbol: String, callback:
                           StocksDataSource.GetStockCallback) {
         val runnable = Runnable {
-            val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbol, TYPES)
+            val call: Call<Map<String, PortfolioResponse>> = mApiService.queryStockList(symbol, TYPES, API_KEY)
 
             val response = call.execute()
             if (response.isSuccessful && response.body()?.size != 0) {
@@ -216,7 +217,12 @@ class StocksRemoteDataSource private constructor(
                 INSTANCE ?: StocksRemoteDataSource(appExecutors, portfolioDao, apiService).also { INSTANCE = it }
             }
 
-        const val BASE_API_URL = "https://api.iextrading.com/1.0/"
+        //const val BASE_API_URL = "https://api.iextrading.com/1.0/"
+        const val BASE_API_URL = "https://cloud.iexapis.com/stable/"
+
         const val TYPES = "quote"
+
+        // FREE API KEY, NOT HIDDING TESTING PURPOSE
+        const val API_KEY = "pk_d58f004fdb774ab19df4380cfb8150ed"
     }
 }
